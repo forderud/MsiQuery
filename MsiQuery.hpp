@@ -167,7 +167,7 @@ private:
         std::wstring buffer(buf_len++, L'\0');
         ret = MsiRecordGetString(record, field, const_cast<wchar_t*>(buffer.data()), &buf_len);
         if (ret != ERROR_SUCCESS)
-            return L"";
+            throw std::runtime_error("MsiRecordGetString failed");
 
         return buffer;
     }
@@ -175,7 +175,7 @@ private:
     static int GetRecordInt(MSIHANDLE record, unsigned int field) {
         int ret = MsiRecordGetInteger(record, field);
         if (ret == MSI_NULL_INTEGER)
-            return 0;
+            throw std::runtime_error("MsiRecordGetInteger failed");
 
         return ret;
     }
@@ -185,9 +185,13 @@ private:
 
 
 static std::wstring GetTargetPath (MSIHANDLE msi, const wchar_t* folder) {
-    std::wstring buffer(MAX_PATH, L'\0'); 
-    DWORD buf_len = (DWORD)buffer.size();
-    UINT ret = MsiGetTargetPath(msi, folder, const_cast<wchar_t*>(buffer.data()), &buf_len);
+    DWORD buf_len = 0;
+    UINT ret = MsiGetTargetPath(msi, folder, const_cast<wchar_t*>(L""), &buf_len);
+    if (ret != ERROR_MORE_DATA)
+        throw std::runtime_error("MsiGetTargetPath failed");
+
+    std::wstring buffer(buf_len++, L'\0'); 
+    ret = MsiGetTargetPath(msi, folder, const_cast<wchar_t*>(buffer.data()), &buf_len);
     if (ret != ERROR_SUCCESS)
         throw std::runtime_error("MsiGetTargetPath failed");
 
