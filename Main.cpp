@@ -123,7 +123,7 @@ void ParseInstalledApp (std::wstring product_code) {
 
 int wmain (int argc, wchar_t *argv[ ]) {
     if (argc < 2) {
-        std::wcout << L"Usage: MsiQuery.exe [<filename.msi>|{product-code}]\n";
+        std::wcout << L"Usage: " << argv[0] << L" [<filename.msi>|{product-code}]\n";
         return 1;
     }
 
