@@ -7,14 +7,6 @@
 #pragma comment(lib, "Msi.lib")
 
 
-/** Convert string to lowercase. */
-static std::wstring ToLower (std::wstring str) {
-    std::transform(str.begin(), str.end(), str.begin(),
-        [](wchar_t c){ return std::tolower(c); });
-    return str;
-}
-
-
 std::wstring ParseMSIorProductCode (const std::wstring& file_or_product) {
     PMSIHANDLE msi;
     if (file_or_product[0] == L'{') {
@@ -84,9 +76,16 @@ bool ParseInstalledApp (std::wstring product_code) {
         // component query
         auto components = query.QuerySS(L"SELECT `Component`,`ComponentId` FROM `Component`");
 
+        // Convert string to lowercase
+        auto to_lowercase = [](std::wstring str) {
+            std::transform(str.begin(), str.end(), str.begin(),
+                [](wchar_t c){ return std::tolower(c); });
+            return str;
+        };
+
         for (const auto& cmp : components) {
             auto path = GetComponentPath(product_code, cmp.second);
-            if (ToLower(path).find(L".exe") != path.npos)
+            if (to_lowercase(path).find(L".exe") != path.npos)
                 std::wcout << L"installed EXE: " << path << L'\n';
         }
     }{
