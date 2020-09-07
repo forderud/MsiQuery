@@ -7,16 +7,33 @@
 #pragma comment(lib, "Msi.lib")
 
 
-std::wstring ParseMSIorProductCode (const std::wstring& file_or_product) {
+/** Returns the first ProductCode associated with a given UpgradeCode. */
+static std::wstring GetProductCode (const std::wstring& upgrade_code) {
+    std::wstring buffer(38, L'\0'); // fixed length
+    DWORD idx = 0;
+    UINT ret = MsiEnumRelatedProducts(upgrade_code.c_str(), NULL, idx, const_cast<wchar_t*>(buffer.data()));
+    if (ret != ERROR_SUCCESS)
+        return L""; // none found
+
+    return buffer;
+}
+
+
+std::wstring ParseMSIOrProductCodeOrUpgradeCode (std::wstring file_or_code) {
     PMSIHANDLE msi;
-    if (file_or_product[0] == L'{') {
+    if (file_or_code[0] == L'{') {
+        // check if input is UpgradeCode
+        auto product_code = GetProductCode(file_or_code);
+        if (!product_code.empty())
+            file_or_code = product_code;
+
         // input is a ProductCode
-        UINT ret = MsiOpenProduct(file_or_product.c_str(), &msi);
+        UINT ret = MsiOpenProduct(file_or_code.c_str(), &msi);
         if (ret != ERROR_SUCCESS)
             throw std::runtime_error("MsiOpenPackage failed");
     } else {
         // input is a MSI filename
-        UINT ret = MsiOpenPackage(file_or_product.c_str(), &msi);
+        UINT ret = MsiOpenPackage(file_or_code.c_str(), &msi);
         if (ret != ERROR_SUCCESS)
             throw std::runtime_error("MsiOpenPackage failed");
     }
@@ -27,7 +44,7 @@ std::wstring ParseMSIorProductCode (const std::wstring& file_or_product) {
         product_code = GetProductProperty(msi, L"ProductCode");
         std::wstring upgrade_code = GetProductProperty(msi, L"UpgradeCode");
         std::wstring product_name = GetProductProperty(msi, L"ProductName");
-        std::wcout << L"MSI metadata for " << file_or_product << L":\n";
+        std::wcout << L"MSI metadata for " << file_or_code << L":\n";
         std::wcout << L"ProductCode: " << product_code << L"\n";
         std::wcout << L"UpgradeCode: " << upgrade_code << L"\n";
         std::wcout << L"ProductName: " << product_name << L"\n";
@@ -102,7 +119,7 @@ bool ParseInstalledApp (std::wstring product_code) {
 
 int wmain (int argc, wchar_t *argv[ ]) {
     if (argc < 2) {
-        std::wcout << L"Usage: " << argv[0] << L" [<filename.msi>|{product-code}]\n";
+        std::wcout << L"Usage: " << argv[0] << L" [<filename.msi>|{ProductCode}|{UpgradeCode}]\n";
         return 1;
     }
 
@@ -112,7 +129,7 @@ int wmain (int argc, wchar_t *argv[ ]) {
     MsiSetInternalUI(INSTALLUILEVEL_NONE, nullptr);
 
     try {
-        auto product_code = ParseMSIorProductCode(argv[1]);
+        auto product_code = ParseMSIOrProductCodeOrUpgradeCode(argv[1]);
         if(!ParseInstalledApp(product_code)) {
             std::wcout << L"ProductCode is NOT installed.\n";
             return 0;
