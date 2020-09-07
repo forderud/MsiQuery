@@ -159,14 +159,16 @@ private:
     }
 
     static std::wstring GetRecordString(MSIHANDLE record, unsigned int field) {
-        std::wstring buffer(255, L'\0');
-        DWORD buf_len = (DWORD)buffer.size();
+        DWORD buf_len = 0;
+        UINT ret = MsiRecordGetString(record, field, const_cast<wchar_t*>(L""), &buf_len);
+        if (ret != ERROR_MORE_DATA)
+            return L"";
 
-        UINT ret = MsiRecordGetString(record, field, const_cast<wchar_t*>(buffer.data()), &buf_len);
+        std::wstring buffer(buf_len++, L'\0');
+        ret = MsiRecordGetString(record, field, const_cast<wchar_t*>(buffer.data()), &buf_len);
         if (ret != ERROR_SUCCESS)
             return L"";
 
-        buffer.resize(buf_len);
         return buffer;
     }
 
