@@ -75,12 +75,10 @@ bool ParseInstalledApp (std::wstring product_code) {
 
         auto custom_actions = query.QueryIS(L"SELECT `Type`,`Target` FROM `CustomAction`");
         for (auto& ca : custom_actions) {
-            CustomActionType type(ca.first);
-
-            if (!type.HasFields(reg_type))
+            if (!ca.first.HasFields(reg_type))
                 continue; // discard custom actions that are neither scripts nor run as admin
 
-            std::wcout << L"CustomAction: " << ca.first << L", " << ca.second << L'\n';
+            std::wcout << L"CustomAction: " << ca.first.ToString() << L", " << ca.second << L'\n';
         }
     }{
         // component query

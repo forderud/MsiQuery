@@ -7,6 +7,66 @@
 #include <msiquery.h>
 
 
+/** CustomAction type parser.
+REF: https://docs.microsoft.com/en-us/windows/win32/msi/summary-list-of-all-custom-action-types */
+struct CustomActionType {
+    CustomActionType () = default;
+
+    /** Parse MSI CustomAction "Type" column. */
+    CustomActionType (int val) {
+        Dll = val & 0x01;
+        Exe = val & 0x02;
+        Directory = val & 0x20;
+        Continue = val & 0x40;
+        InScript = val & 0x400;
+        NoImpersonate = val & 0x800;
+    }
+
+    bool HasFields (const CustomActionType other) const {
+        // Wix custom actions:
+        // Type 65   (0x41)  =                                            Continue (0x40)                    + Dll (0x01)
+
+        // Custom EXE register:
+        // Type 3106 (0xC22) = NoImpersonate (0x800) + InScript (0x400)                   + Directory (0x20) + Exe (0x02) // Type 34 run executable
+        // Type 3170 (0xC62) = NoImpersonate (0x800) + InScript (0x400) + Continue (0x40) + Directory (0x20) + Exe (0x02)
+
+        if (other.Dll && !Dll)
+            return false;
+        if (other.Exe && !Exe)
+            return false;
+        if (other.Directory && !Directory)
+            return false;
+        if (other.Continue && !Continue)
+            return false;
+        if (other.InScript && !InScript)
+            return false;
+        if (other.NoImpersonate && !NoImpersonate)
+            return false;
+
+        return true;
+    }
+
+    std::wstring ToString() const {
+        std::wstring res = L"[";
+        if (Dll) res += L"Dll,";
+        if (Exe) res += L"Exe,";
+        if (Directory) res += L"Directory,";
+        if (Continue) res += L"Continue,";
+        if (InScript) res += L"InScript,";
+        if (NoImpersonate) res += L"NoImpersonate,";
+        return res.substr(0, res.size() - 1) + L"]";
+    }
+
+    bool Dll           = false; ///< msidbCustomActionTypeDll (0x01)
+    bool Exe           = false; ///< msidbCustomActionTypeExe (0x02)
+    bool Directory     = false; ///< msidbCustomActionTypeDirectory (0x20)
+    bool Continue      = false; ///< msidbCustomActionTypeContinue (0x40)
+    bool InScript      = false; ///< msidbCustomActionTypeInScript (0x400)
+    bool NoImpersonate = false; ///< msidbCustomActionTypeNoImpersonate (0x800) - run as ADMIN
+                                // TODO: Add missing types
+};
+
+
 /** Query an installed MSI file. 
     Based on WiCompon.vbs sample (installed under C:\Program Files (x86)\Windows Kits\10\bin\<version>\x64) */
 class MsiQuery {
@@ -45,11 +105,11 @@ public:
     }
 
     /** Perform query that returns an int and string per row. */
-    std::vector<std::pair<int,std::wstring>> QueryIS (const std::wstring& sql_query) {
+    std::vector<std::pair<CustomActionType,std::wstring>> QueryIS (const std::wstring& sql_query) {
         PMSIHANDLE msi_view;
         Execute(sql_query, &msi_view);
 
-        std::vector<std::pair<int,std::wstring>> result;
+        std::vector<std::pair<CustomActionType,std::wstring>> result;
         while (true) {
             PMSIHANDLE msi_record;
             UINT ret = MsiViewFetch(msi_view, &msi_record);
@@ -110,51 +170,3 @@ static std::wstring GetTargetPath (MSIHANDLE msi, const wchar_t* folder) {
 
     return buffer;
 }
-
-/** CustomAction type parser.
-    REF: https://docs.microsoft.com/en-us/windows/win32/msi/summary-list-of-all-custom-action-types */
-struct CustomActionType {
-    CustomActionType () = default;
-
-    /** Parse MSI CustomAction "Type" column. */
-    CustomActionType (int val) {
-        Dll = val & 0x01;
-        Exe = val & 0x02;
-        Directory = val & 0x20;
-        Continue = val & 0x40;
-        InScript = val & 0x400;
-        NoImpersonate = val & 0x800;
-    }
-
-    bool HasFields (const CustomActionType other) {
-        // Wix custom actions:
-        // Type 65   (0x41)  =                                            Continue (0x40)                    + Dll (0x01)
-
-        // Custom EXE register:
-        // Type 3106 (0xC22) = NoImpersonate (0x800) + InScript (0x400)                   + Directory (0x20) + Exe (0x02) // Type 34 run executable
-        // Type 3170 (0xC62) = NoImpersonate (0x800) + InScript (0x400) + Continue (0x40) + Directory (0x20) + Exe (0x02)
-
-        if (other.Dll && !Dll)
-            return false;
-        if (other.Exe && !Exe)
-            return false;
-        if (other.Directory && !Directory)
-            return false;
-        if (other.Continue && !Continue)
-            return false;
-        if (other.InScript && !InScript)
-            return false;
-        if (other.NoImpersonate && !NoImpersonate)
-            return false;
-
-        return true;
-    }
-
-    bool Dll           = false; ///< msidbCustomActionTypeDll (0x01)
-    bool Exe           = false; ///< msidbCustomActionTypeExe (0x02)
-    bool Directory     = false; ///< msidbCustomActionTypeDirectory (0x20)
-    bool Continue      = false; ///< msidbCustomActionTypeContinue (0x40)
-    bool InScript      = false; ///< msidbCustomActionTypeInScript (0x400)
-    bool NoImpersonate = false; ///< msidbCustomActionTypeNoImpersonate (0x800) - run as ADMIN
-    // TODO: Add missing types
-};
