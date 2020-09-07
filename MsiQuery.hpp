@@ -115,6 +115,7 @@ static std::wstring GetTargetPath (MSIHANDLE msi, const wchar_t* folder) {
     REF: https://docs.microsoft.com/en-us/windows/win32/msi/summary-list-of-all-custom-action-types */
 struct CustomActionType {
     CustomActionType () = default;
+
     /** Parse MSI CustomAction "Type" column. */
     CustomActionType (int val) {
         Dll = val & 0x01;
@@ -123,6 +124,30 @@ struct CustomActionType {
         Continue = val & 0x40;
         InScript = val & 0x400;
         NoImpersonate = val & 0x800;
+    }
+
+    bool HasFields (const CustomActionType other) {
+        // Wix custom actions:
+        // Type 65   (0x41)  =                                            Continue (0x40)                    + Dll (0x01)
+
+        // Custom EXE register:
+        // Type 3106 (0xC22) = NoImpersonate (0x800) + InScript (0x400)                   + Directory (0x20) + Exe (0x02) // Type 34 run executable
+        // Type 3170 (0xC62) = NoImpersonate (0x800) + InScript (0x400) + Continue (0x40) + Directory (0x20) + Exe (0x02)
+
+        if (other.Dll && !Dll)
+            return false;
+        if (other.Exe && !Exe)
+            return false;
+        if (other.Directory && !Directory)
+            return false;
+        if (other.Continue && !Continue)
+            return false;
+        if (other.InScript && !InScript)
+            return false;
+        if (other.NoImpersonate && !NoImpersonate)
+            return false;
+
+        return true;
     }
 
     bool Dll           = false; ///< msidbCustomActionTypeDll (0x01)
