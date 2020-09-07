@@ -10,16 +10,13 @@
 /** CustomAction type parser.
 REF: https://docs.microsoft.com/en-us/windows/win32/msi/summary-list-of-all-custom-action-types */
 struct CustomActionType {
-    CustomActionType () = default;
+    CustomActionType () {
+        memset(this, 0, sizeof(CustomActionType));
+    }
 
     /** Parse MSI CustomAction "Type" column. */
     CustomActionType (int val) {
-        Dll           = val & MASK_Dll;
-        Exe           = val & MASK_Exe;
-        Directory     = val & MASK_Directory;
-        Continue      = val & MASK_Continue;
-        InScript      = val & MASK_InScript;
-        NoImpersonate = val & MASK_NoImpersonate;
+        (int&)(*this) = val;
     }
 
     bool HasFields (const CustomActionType other) const {
@@ -30,20 +27,7 @@ struct CustomActionType {
         // Type 3106 (0xC22) = NoImpersonate (0x800) + InScript (0x400)                   + Directory (0x20) + Exe (0x02) // Type 34 run executable
         // Type 3170 (0xC62) = NoImpersonate (0x800) + InScript (0x400) + Continue (0x40) + Directory (0x20) + Exe (0x02)
 
-        if (other.Dll && !Dll)
-            return false;
-        if (other.Exe && !Exe)
-            return false;
-        if (other.Directory && !Directory)
-            return false;
-        if (other.Continue && !Continue)
-            return false;
-        if (other.InScript && !InScript)
-            return false;
-        if (other.NoImpersonate && !NoImpersonate)
-            return false;
-
-        return true;
+        return (int)(*this) & (int)other;
     }
 
     std::wstring ToString() const {
@@ -57,22 +41,26 @@ struct CustomActionType {
         return res.substr(0, res.size() - 1) + L"]";
     }
 
-    bool Dll           = false; ///< msidbCustomActionTypeDll (0x01)
-    bool Exe           = false; ///< msidbCustomActionTypeExe (0x02)
-    bool Directory     = false; ///< msidbCustomActionTypeDirectory (0x20)
-    bool Continue      = false; ///< msidbCustomActionTypeContinue (0x40)
-    bool InScript      = false; ///< msidbCustomActionTypeInScript (0x400)
-    bool NoImpersonate = false; ///< msidbCustomActionTypeNoImpersonate (0x800) - run as ADMIN
-                                // TODO: Add missing types
+    operator int& () {
+        return *reinterpret_cast<int*>(this);
+    }
+    operator const int& () const {
+        return *reinterpret_cast<const int*>(this);
+    }
 
-private:
-    static constexpr int MASK_Dll = 0x01;
-    static constexpr int MASK_Exe = 0x02;
-    static constexpr int MASK_Directory = 0x20;
-    static constexpr int MASK_Continue = 0x40;
-    static constexpr int MASK_InScript = 0x400;
-    static constexpr int MASK_NoImpersonate = 0x800;
+    bool Dll           : 1; ///< msidbCustomActionTypeDll (0x01)
+    bool Exe           : 1; ///< msidbCustomActionTypeExe (0x02)
+    bool padding1      : 3;
+    bool Directory     : 1; ///< msidbCustomActionTypeDirectory (0x20)
+    bool Continue      : 1; ///< msidbCustomActionTypeContinue (0x40)
+    bool padding2      : 3;
+    bool InScript      : 1; ///< msidbCustomActionTypeInScript (0x400)
+    bool NoImpersonate : 1; ///< msidbCustomActionTypeNoImpersonate (0x800) - run as ADMIN
+    bool padding3      : 3;
+    bool padding4      : 8;
+    bool padding5      : 8;
 };
+static_assert(sizeof(CustomActionType) == sizeof(int), "CustomActionType size mismatch");
 
 
 /** Query an installed MSI file. 
