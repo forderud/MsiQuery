@@ -14,12 +14,12 @@ struct CustomActionType {
 
     /** Parse MSI CustomAction "Type" column. */
     CustomActionType (int val) {
-        Dll = val & 0x01;
-        Exe = val & 0x02;
-        Directory = val & 0x20;
-        Continue = val & 0x40;
-        InScript = val & 0x400;
-        NoImpersonate = val & 0x800;
+        Dll           = val & MASK_Dll;
+        Exe           = val & MASK_Exe;
+        Directory     = val & MASK_Directory;
+        Continue      = val & MASK_Continue;
+        InScript      = val & MASK_InScript;
+        NoImpersonate = val & MASK_NoImpersonate;
     }
 
     bool HasFields (const CustomActionType other) const {
@@ -64,6 +64,14 @@ struct CustomActionType {
     bool InScript      = false; ///< msidbCustomActionTypeInScript (0x400)
     bool NoImpersonate = false; ///< msidbCustomActionTypeNoImpersonate (0x800) - run as ADMIN
                                 // TODO: Add missing types
+
+private:
+    static constexpr int MASK_Dll = 0x01;
+    static constexpr int MASK_Exe = 0x02;
+    static constexpr int MASK_Directory = 0x20;
+    static constexpr int MASK_Continue = 0x40;
+    static constexpr int MASK_InScript = 0x400;
+    static constexpr int MASK_NoImpersonate = 0x800;
 };
 
 
