@@ -23,15 +23,19 @@ static std::wstring GetProductProperty (MSIHANDLE msi, const wchar_t* property) 
 
 /** Get info for published & installed products. */
 static std::wstring GetProductInfo (const std::wstring& product_code, const wchar_t* attribute) {
-    std::wstring buffer(255, L'\0');
-    DWORD buf_len = (DWORD)buffer.size();
-    UINT ret = MsiGetProductInfo(product_code.c_str(), attribute, const_cast<wchar_t*>(buffer.data()), &buf_len);
-    if (ret == ERROR_MORE_DATA) {
-        throw std::runtime_error("Insufficient MsiGetProductInfo buffer size");
-    }
+    wchar_t EMPTY_STRING[] = L""; // cannot const_cast(L"") since MsiGetProductInfo will write to empty string
+
+    DWORD buf_len = 0;
+    UINT ret = MsiGetProductInfo(product_code.c_str(), attribute, EMPTY_STRING, &buf_len);
+    if (ret == ERROR_SUCCESS)
+        return EMPTY_STRING;
+    else if (ret != ERROR_MORE_DATA)
+        throw std::runtime_error("MsiGetProductInfo failed");
+
+    std::wstring buffer(buf_len++, L'\0');
+    ret = MsiGetProductInfo(product_code.c_str(), attribute, const_cast<wchar_t*>(buffer.data()), &buf_len);
     if (ret != ERROR_SUCCESS)
-        throw std::runtime_error("MsiGetProductProperty failed");
-    buffer.resize(buf_len);
+        throw std::runtime_error("MsiGetProductInfo failed");
     return buffer;
 }
 
