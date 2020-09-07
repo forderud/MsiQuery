@@ -43,6 +43,9 @@ struct CustomActionType {
         if (Commit) res += L"Commit,";
         if (InScript) res += L"InScript,";
         if (NoImpersonate) res += L"NoImpersonate,";
+        if (HideTarget) res += L"HideTarget,";
+        if (TSAware) res += L"TSAware,";
+        if (PatchUninstall) res += L"PatchUninstall,";
         return res.substr(0, res.size() - 1) + L"]";
     }
 
@@ -67,9 +70,12 @@ struct CustomActionType {
     bool Commit        : 1; ///< msidbCustomActionTypeOncePerProcess or msidbCustomActionTypeCommit (0x200)
     bool InScript      : 1; ///< msidbCustomActionTypeInScript (0x400)
     bool NoImpersonate : 1; ///< msidbCustomActionTypeNoImpersonate (0x800) - run as ADMIN
-    bool padding3      : 3;
+    bool padding2      : 1;
+    bool HideTarget    : 1; ///< msidbCustomActionTypeHideTarget (0x2000)
+    bool TSAware       : 1; ///< msidbCustomActionTypeTSAware (0x4000) (Terminal Server)
+    bool PatchUninstall: 1; ///< msidbCustomActionTypePatchUninstall (0x8000)
+    bool padding3      : 7;
     bool padding4      : 8;
-    bool padding5      : 8;
 };
 static_assert(sizeof(CustomActionType) == sizeof(int), "CustomActionType size mismatch");
 
