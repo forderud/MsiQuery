@@ -41,12 +41,13 @@ static std::wstring GetProductInfo (const std::wstring& product_code, const wcha
 
 
 static std::wstring GetComponentPath (const std::wstring& product, const std::wstring& component) {
-    std::wstring buffer(MAX_PATH, L'\0'); 
-    DWORD buf_len = (DWORD)buffer.size();
-
-    UINT ret = MsiGetComponentPath(product.c_str(), component.c_str(), const_cast<wchar_t*>(buffer.data()), &buf_len);
+    DWORD buf_len = 0;
+    UINT ret = MsiGetComponentPath(product.c_str(), component.c_str(), nullptr, &buf_len);
     assert(ret == INSTALLSTATE_LOCAL);
-    buffer.resize(buf_len);
+
+    std::wstring buffer(buf_len++, L'\0'); 
+    ret = MsiGetComponentPath(product.c_str(), component.c_str(), const_cast<wchar_t*>(buffer.data()), &buf_len);
+    assert(ret == INSTALLSTATE_LOCAL);
     return buffer;
 }
 
