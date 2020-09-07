@@ -60,7 +60,7 @@ struct CustomActionType {
      * ClientRepeat (0x300) = FirstSequence + OncePerProcess */
     bool Dll           : 1; ///< msidbCustomActionTypeDll or msidbCustomActionTypeBinaryData (0x01)
     bool Exe           : 1; ///< msidbCustomActionTypeExe (0x02)
-    bool JScript       : 2; ///< msidbCustomActionTypeJScript (0x04)
+    bool JScript       : 1; ///< msidbCustomActionTypeJScript (0x04)
     bool padding1      : 1;
     bool SourceFile    : 1; ///< msidbCustomActionTypeSourceFile (0x10)
     bool Directory     : 1; ///< msidbCustomActionTypeDirectory (0x20)
@@ -74,7 +74,7 @@ struct CustomActionType {
     bool HideTarget    : 1; ///< msidbCustomActionTypeHideTarget (0x2000)
     bool TSAware       : 1; ///< msidbCustomActionTypeTSAware (0x4000) (Terminal Server)
     bool PatchUninstall: 1; ///< msidbCustomActionTypePatchUninstall (0x8000)
-    bool padding3      : 7;
+    bool padding3      : 8;
     bool padding4      : 8;
 };
 static_assert(sizeof(CustomActionType) == sizeof(int), "CustomActionType size mismatch");
