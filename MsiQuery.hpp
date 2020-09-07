@@ -5,10 +5,12 @@
 
 #include <Windows.h>
 #include <msiquery.h>
+#include <MsiDefs.h>
 
 
 /** CustomAction type parser.
-REF: https://docs.microsoft.com/en-us/windows/win32/msi/summary-list-of-all-custom-action-types */
+*   Based on msidbCustomActionType enum in <msidefs.h>
+*   REF: https://docs.microsoft.com/en-us/windows/win32/msi/summary-list-of-all-custom-action-types */
 struct CustomActionType {
     CustomActionType () {
         memset(this, 0, sizeof(CustomActionType));
@@ -34,7 +36,7 @@ struct CustomActionType {
         std::wstring res = L"[";
         if (Dll) res += L"Dll,";
         if (Exe) res += L"Exe,";
-        if (JScript) res += L"JScript,";
+        if (Script) res += L"Script,";
         if (SourceFile) res += L"SourceFile,";
         if (Directory) res += L"Directory,";
         if (Continue) res += L"Continue,";
@@ -43,6 +45,7 @@ struct CustomActionType {
         if (Commit) res += L"Commit,";
         if (InScript) res += L"InScript,";
         if (NoImpersonate) res += L"NoImpersonate,";
+        if (Script64Bit) res += L"Script64Bit,";
         if (HideTarget) res += L"HideTarget,";
         if (TSAware) res += L"TSAware,";
         if (PatchUninstall) res += L"PatchUninstall,";
@@ -57,11 +60,16 @@ struct CustomActionType {
     }
 
     /** Special combinations:
-     * ClientRepeat (0x300) = FirstSequence + OncePerProcess */
-    bool Dll           : 1; ///< msidbCustomActionTypeDll or msidbCustomActionTypeBinaryData (0x01)
+    *   msidbCustomActionTypeTextData (0x03) = Dll | Exe 
+    *   msidbCustomActionTypeJScript (0x05) = 0x04 | Dll
+    *   msidbCustomActionTypeVBScript (0x06) = 0x04 | Dll
+    *   msidbCustomActionTypeInstall (0x07) = 0x04 | Exe | Dll
+    *   msidbCustomActionTypeProperty (0x30) = Directory | File
+    *   msidbCustomActionTypeClientRepeat (0x300) = FirstSequence + OncePerProcess */
+    bool Dll           : 1; ///< msidbCustomActionTypeDll (0x01)
     bool Exe           : 1; ///< msidbCustomActionTypeExe (0x02)
-    bool JScript       : 1; ///< msidbCustomActionTypeJScript (0x04)
-    bool padding1      : 1;
+    bool Script        : 1; ///< script (used by msidbCustomActionTypeJScript (0x05) and msidbCustomActionTypeVBScript (0x06))
+    bool _padding1     : 1;
     bool SourceFile    : 1; ///< msidbCustomActionTypeSourceFile (0x10)
     bool Directory     : 1; ///< msidbCustomActionTypeDirectory (0x20)
     bool Continue      : 1; ///< msidbCustomActionTypeContinue (0x40)
@@ -70,12 +78,12 @@ struct CustomActionType {
     bool Commit        : 1; ///< msidbCustomActionTypeOncePerProcess or msidbCustomActionTypeCommit (0x200)
     bool InScript      : 1; ///< msidbCustomActionTypeInScript (0x400)
     bool NoImpersonate : 1; ///< msidbCustomActionTypeNoImpersonate (0x800) - run as ADMIN
-    bool padding2      : 1;
+    bool Script64Bit   : 1; ///< msidbCustomActionType64BitScript (0x1000)
     bool HideTarget    : 1; ///< msidbCustomActionTypeHideTarget (0x2000)
     bool TSAware       : 1; ///< msidbCustomActionTypeTSAware (0x4000) (Terminal Server)
     bool PatchUninstall: 1; ///< msidbCustomActionTypePatchUninstall (0x8000)
-    bool padding3      : 8;
-    bool padding4      : 8;
+    bool _padding2     : 8;
+    bool _padding3     : 8;
 };
 static_assert(sizeof(CustomActionType) == sizeof(int), "CustomActionType size mismatch");
 
