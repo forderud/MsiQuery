@@ -110,3 +110,26 @@ static std::wstring GetTargetPath (MSIHANDLE msi, const wchar_t* folder) {
 
     return buffer;
 }
+
+/** CustomAction type parser.
+    REF: https://docs.microsoft.com/en-us/windows/win32/msi/summary-list-of-all-custom-action-types */
+struct CustomActionType {
+    CustomActionType () = default;
+    /** Parse MSI CustomAction "Type" column. */
+    CustomActionType (int val) {
+        Dll = val & 0x01;
+        Exe = val & 0x02;
+        Directory = val & 0x20;
+        Continue = val & 0x40;
+        InScript = val & 0x400;
+        NoImpersonate = val & 0x800;
+    }
+
+    bool Dll           = false; ///< msidbCustomActionTypeDll (0x01)
+    bool Exe           = false; ///< msidbCustomActionTypeExe (0x02)
+    bool Directory     = false; ///< msidbCustomActionTypeDirectory (0x20)
+    bool Continue      = false; ///< msidbCustomActionTypeContinue (0x40)
+    bool InScript      = false; ///< msidbCustomActionTypeInScript (0x400)
+    bool NoImpersonate = false; ///< msidbCustomActionTypeNoImpersonate (0x800) - run as ADMIN
+    // TODO: Add missing types
+};

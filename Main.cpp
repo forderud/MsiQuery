@@ -41,46 +41,29 @@ std::wstring ParseMSIorProductCode (const std::wstring& file_or_product) {
         std::wcout << L"ProductName: " << product_name << L"\n";
     }
 
-    {
+    return product_code;
+}
+
+
+bool ParseInstalledApp (std::wstring product_code) {
+    std::wstring msi_cache_file;
+    try {
         // installation details
         //std::wstring inst_prod_code = GetProductInfo(product_code.c_str(), L"ProductCode");
         //assert(inst_prod_code == product_code);
 
-        std::wstring msi_cache_file = GetProductInfo(product_code.c_str(), INSTALLPROPERTY_LOCALPACKAGE); // Local cached package
+        msi_cache_file = GetProductInfo(product_code.c_str(), INSTALLPROPERTY_LOCALPACKAGE); // Local cached package
+    } catch (const std::exception & e) {
+        e;
+        return false; // doesn't appear to be installed
+    }
+
+    {
         std::wstring inst_loc = GetProductInfo(product_code.c_str(), INSTALLPROPERTY_INSTALLLOCATION); // seem to be empty
         //std::wstring inst_folder = GetProductInfo(product_code.c_str(), L"INSTALLFOLDER"); // not found
         std::wstring prod_id = GetProductInfo(product_code.c_str(), INSTALLPROPERTY_PRODUCTID); // seem to be empty
     }
 
-    return product_code;
-}
-
-
-/** CustomAction type parser.
-    REF: https://docs.microsoft.com/en-us/windows/win32/msi/summary-list-of-all-custom-action-types */
-struct CustomActionType {
-    /** Parse MSI CustomAction "Type" column. */
-    CustomActionType (int val) {
-        Dll = val & 0x01;
-        Exe = val & 0x02;
-        Directory = val & 0x20;
-        Continue = val & 0x40;
-        InScript = val & 0x400;
-        NoImpersonate = val & 0x800;
-    }
-
-    bool Dll           = false; ///< msidbCustomActionTypeDll (0x01)
-    bool Exe           = false; ///< msidbCustomActionTypeExe (0x02)
-    bool Directory     = false; ///< msidbCustomActionTypeDirectory (0x20)
-    bool Continue      = false; ///< msidbCustomActionTypeContinue (0x40)
-    bool InScript      = false; ///< msidbCustomActionTypeInScript (0x400)
-    bool NoImpersonate = false; ///< msidbCustomActionTypeNoImpersonate (0x800) - run as ADMIN
-    // TODO: Add missing types
-};
-
-
-void ParseInstalledApp (std::wstring product_code) {
-    std::wstring msi_cache_file = GetProductInfo(product_code.c_str(), INSTALLPROPERTY_LOCALPACKAGE); // Local cached package
 
     MsiQuery query(msi_cache_file);
 
@@ -118,6 +101,8 @@ void ParseInstalledApp (std::wstring product_code) {
             std::wcout << L"File: " << file.first << L", " << file.second << L'\n';
         }
     }
+
+    return true;
 }
 
 
@@ -129,12 +114,15 @@ int wmain (int argc, wchar_t *argv[ ]) {
 
     CoInitializeEx(nullptr, COINIT_APARTMENTTHREADED);
 
-    try {
-        // hide MSI installer UI
-        MsiSetInternalUI(INSTALLUILEVEL_NONE, nullptr);
+    // hide MSI installer UI
+    MsiSetInternalUI(INSTALLUILEVEL_NONE, nullptr);
 
+    try {
         auto product_code = ParseMSIorProductCode(argv[1]);
-        ParseInstalledApp(product_code);
+        if(!ParseInstalledApp(product_code)) {
+            std::wcout << L"ProductCode is NOT installed.\n";
+            return 0;
+        }
     } catch (std::exception & e) {
         std::cerr << "ERROR: " << e.what() << std::endl;
         return -1;
