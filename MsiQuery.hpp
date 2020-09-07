@@ -34,8 +34,13 @@ struct CustomActionType {
         std::wstring res = L"[";
         if (Dll) res += L"Dll,";
         if (Exe) res += L"Exe,";
+        if (JScript) res += L"JScript,";
+        if (SourceFile) res += L"SourceFile,";
         if (Directory) res += L"Directory,";
         if (Continue) res += L"Continue,";
+        if (Async) res += L"Async,";
+        if (Rollback) res += L"Rollback,";
+        if (Commit) res += L"Commit,";
         if (InScript) res += L"InScript,";
         if (NoImpersonate) res += L"NoImpersonate,";
         return res.substr(0, res.size() - 1) + L"]";
@@ -48,12 +53,18 @@ struct CustomActionType {
         return *reinterpret_cast<const int*>(this);
     }
 
-    bool Dll           : 1; ///< msidbCustomActionTypeDll (0x01)
+    /** Special combinations:
+     * ClientRepeat (0x300) = FirstSequence + OncePerProcess */
+    bool Dll           : 1; ///< msidbCustomActionTypeDll or msidbCustomActionTypeBinaryData (0x01)
     bool Exe           : 1; ///< msidbCustomActionTypeExe (0x02)
-    bool padding1      : 3;
+    bool JScript       : 2; ///< msidbCustomActionTypeJScript (0x04)
+    bool padding1      : 1;
+    bool SourceFile    : 1; ///< msidbCustomActionTypeSourceFile (0x10)
     bool Directory     : 1; ///< msidbCustomActionTypeDirectory (0x20)
     bool Continue      : 1; ///< msidbCustomActionTypeContinue (0x40)
-    bool padding2      : 3;
+    bool Async         : 1; ///< msidbCustomActionTypeAsync (0x80)
+    bool Rollback      : 1; ///< msidbCustomActionTypeFirstSequence or msidbCustomActionTypeRollback (0x100)
+    bool Commit        : 1; ///< msidbCustomActionTypeOncePerProcess or msidbCustomActionTypeCommit (0x200)
     bool InScript      : 1; ///< msidbCustomActionTypeInScript (0x400)
     bool NoImpersonate : 1; ///< msidbCustomActionTypeNoImpersonate (0x800) - run as ADMIN
     bool padding3      : 3;
