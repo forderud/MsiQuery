@@ -55,6 +55,7 @@ std::wstring ParseMSIOrProductCodeOrUpgradeCode (std::wstring file_or_code) {
         std::wcout << L"UpgradeCode: " << upgrade_code << L"\n";
         std::wcout << L"ProductName: " << product_name << L" (" << product_ver << L")\n";
         std::wcout << L"Manufacturer: " << manufacturer << L"\n";
+        std::wcout << L"\n";
     }
 
     return product_code;
@@ -83,6 +84,12 @@ bool ParseInstalledApp (std::wstring product_code) {
         std::wstring publisher = GetProductInfo(product_code.c_str(), INSTALLPROPERTY_PUBLISHER); // seem identical to Manufacturer
         std::wstring version = GetProductInfo(product_code.c_str(), INSTALLPROPERTY_VERSIONSTRING); // seem identical to ProductVersion
         std::wstring inst_date = GetProductInfo(product_code.c_str(), INSTALLPROPERTY_INSTALLDATE); // "YYYYMMDD" format
+
+        std::wcout << L"Installed properties:\n";
+        std::wcout << L"InstalledProductName: " << inst_name << L" (" << version << L")\n";
+        std::wcout << L"Publisher: " << publisher << L"\n";
+        std::wcout << L"InstallDate: " << inst_date << L"\n";
+        std::wcout << L"\n";
     }
 
     MsiQuery query(msi_cache_file);
