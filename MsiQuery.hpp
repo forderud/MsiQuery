@@ -134,6 +134,15 @@ struct FileEntry {
     //...
 };
 
+struct ComponentEntry {
+    std::wstring Component;
+    std::wstring ComponentId;
+    std::wstring Directory_;
+    //std::wstring Attributes;
+    //std::wstring Condition;
+    //std::wstring KeyPath;
+};
+
 /** Query an installed MSI file. 
     Based on WiCompon.vbs sample (installed under C:\Program Files (x86)\Windows Kits\10\bin\<version>\x64) */
 class MsiQuery {
@@ -150,11 +159,11 @@ public:
     }
 
     /** Perform query that returns two strings per row. */
-    std::vector<std::tuple<std::wstring,std::wstring>> QuerySS (std::wstring sql_query) {
+    std::vector<ComponentEntry> QueryComponent () {
         PMSIHANDLE msi_view;
-        Execute(sql_query, &msi_view);
+        Execute(L"SELECT `Component`,`ComponentId`,`Directory_` FROM `Component`", &msi_view);
 
-        std::vector<std::tuple<std::wstring,std::wstring>> result;
+        std::vector<ComponentEntry> result;
         while (true) {
             PMSIHANDLE msi_record;
             UINT ret = MsiViewFetch(msi_view, &msi_record);
@@ -165,7 +174,8 @@ public:
 
             auto val1 = GetRecordString(msi_record, 1);
             auto val2 = GetRecordString(msi_record, 2);
-            result.push_back({val1, val2});
+            auto val3 = GetRecordString(msi_record, 3);
+            result.push_back({val1, val2, val3});
         }
 
         return result;

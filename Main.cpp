@@ -109,7 +109,7 @@ bool ParseInstalledApp (std::wstring product_code, bool list_files) {
     }
     {
         // component query
-        auto components = query.QuerySS(L"SELECT `Component`,`ComponentId` FROM `Component`");
+        auto components = query.QueryComponent();
 
         // Convert string to lowercase
         auto to_lowercase = [](std::wstring str) {
@@ -118,8 +118,8 @@ bool ParseInstalledApp (std::wstring product_code, bool list_files) {
             return str;
         };
 
-        for (const auto& cmp : components) {
-            auto path = GetComponentPath(product_code, std::get<1>(cmp));
+        for (const ComponentEntry& cmp : components) {
+            auto path = GetComponentPath(product_code, cmp.ComponentId);
             if (to_lowercase(path).find(L".exe") == path.npos)
                 continue; // filter out non-EXE files
 
