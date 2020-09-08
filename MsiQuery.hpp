@@ -88,6 +88,7 @@ struct CustomActionType {
 };
 static_assert(sizeof(CustomActionType) == sizeof(int), "CustomActionType size mismatch");
 
+/** https://docs.microsoft.com/en-us/windows/win32/msi/customaction-table */
 struct CustomActionEntry {
     std::wstring     Action;
     CustomActionType Type;
@@ -126,7 +127,7 @@ struct RegEntry {
     std::wstring Component_;
 };
 
-
+/** https://docs.microsoft.com/en-us/windows/win32/msi/file-table */
 struct FileEntry {
     std::wstring File;
     std::wstring Component_;
@@ -135,6 +136,7 @@ struct FileEntry {
     //...
 };
 
+/** https://docs.microsoft.com/en-us/windows/win32/msi/component-table */
 struct ComponentEntry {
     std::wstring Component;
     std::wstring ComponentId;
@@ -143,6 +145,7 @@ struct ComponentEntry {
     //std::wstring Condition;
     //std::wstring KeyPath;
 };
+
 
 /** Query an installed MSI file. 
     Based on WiCompon.vbs sample (installed under C:\Program Files (x86)\Windows Kits\10\bin\<version>\x64) */
