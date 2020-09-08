@@ -89,6 +89,25 @@ struct CustomActionType {
 static_assert(sizeof(CustomActionType) == sizeof(int), "CustomActionType size mismatch");
 
 
+enum class RegType : int {
+    Dynamic = -1,
+    ClassesRoot = 0,
+    CurrentUser = 1,
+    LocalMachine = 2,
+    Users = 3,
+};
+
+std::wstring ToString (RegType type) {
+    switch (type) {
+    case RegType::Dynamic: return L"Dynamic";
+    case RegType::ClassesRoot: return L"ClassesRoot";
+    case RegType::CurrentUser: return L"CurrentUser";
+    case RegType::LocalMachine: return L"LocalMachine";
+    case RegType::Users: return L"Users";
+    }
+    abort(); // should never be reached
+}
+
 /** Query an installed MSI file. 
     Based on WiCompon.vbs sample (installed under C:\Program Files (x86)\Windows Kits\10\bin\<version>\x64) */
 class MsiQuery {
@@ -127,11 +146,11 @@ public:
     }
 
     /** Perform query that returns two strings per row. */
-    std::vector<std::tuple<int,std::wstring,std::wstring,std::wstring>> QueryISSS (std::wstring sql_query) {
+    std::vector<std::tuple<RegType,std::wstring,std::wstring,std::wstring>> QueryISSS (std::wstring sql_query) {
         PMSIHANDLE msi_view;
         Execute(sql_query, &msi_view);
 
-        std::vector<std::tuple<int,std::wstring,std::wstring,std::wstring>> result;
+        std::vector<std::tuple<RegType,std::wstring,std::wstring,std::wstring>> result;
         while (true) {
             PMSIHANDLE msi_record;
             UINT ret = MsiViewFetch(msi_view, &msi_record);
@@ -144,7 +163,7 @@ public:
             auto val2 = GetRecordString(msi_record, 2);
             auto val3 = GetRecordString(msi_record, 3);
             auto val4 = GetRecordString(msi_record, 4);
-            result.push_back({val1, val2, val3, val4});
+            result.push_back({static_cast<RegType>(val1), val2, val3, val4});
         }
 
         return result;
