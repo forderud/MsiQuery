@@ -225,7 +225,7 @@ public:
             auto val4 = GetRecordString(msi_record, 4);
             auto val5 = GetRecordString(msi_record, 5);
             auto val6 = GetRecordString(msi_record, 6);
-            result.push_back({val1, val2, val3, val5, val6});
+            result.push_back({val1, val2, val3, val4, val5, val6});
         }
 
         return result;
