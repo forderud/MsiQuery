@@ -96,14 +96,12 @@ bool ParseInstalledApp (std::wstring product_code) {
 
     {
         // custom action query
-        CustomActionType reg_type;
-        reg_type.InScript = true;
-        reg_type.NoImpersonate = true;
-
         auto custom_actions = query.QueryIS(L"SELECT `Type`,`Target` FROM `CustomAction`");
         for (auto& ca : custom_actions) {
-            if (!ca.first.HasFields(reg_type))
-                continue; // discard custom actions that are neither scripts nor run as admin
+            if (!ca.first.NoImpersonate)
+                continue; // discard custom actions that does not run as admin
+            if (!ca.first.InScript)
+                continue; // discard custom actions that are not scripts
 
             std::wcout << L"CustomAction: " << ca.first.ToString() << L", " << ca.second << L'\n';
         }

@@ -10,26 +10,26 @@
 
 /** CustomAction type parser.
 *   Based on msidbCustomActionType enum in <msidefs.h>
-*   REF: https://docs.microsoft.com/en-us/windows/win32/msi/summary-list-of-all-custom-action-types */
+*   REF: https://docs.microsoft.com/en-us/windows/win32/msi/summary-list-of-all-custom-action-types
+* 
+*   Wix custom actions:
+*    Type 65   (0x041)  =                                                                Continue(0x40)                    + Dll(0x01) // ValidatePath, PrintEula
+*   Custom EXE register:
+*    Type 3106 (0x0C22) =                       NoImpersonate(0x800) + InScript(0x400)                  + Directory(0x20)  + Exe(0x02) // Type 34 run executable
+*    Type 3170 (0x0C62) =                       NoImpersonate(0x800) + InScript(0x400) + Continue(0x40) + Directory(0x20)  + Exe(0x02)
+*   Custom JScript:
+*    Type 7189 (0x1C15) = Script64Bit(0x1000) + NoImpersonate(0x800) + InScript(0x400) +                  SourceFile(0x10) + Script(0x04) + Dll(0x01) // Type 21 JScript
+*    Type 7253 (0x1C55) = Script64Bit(0x1000) + NoImpersonate(0x800) + InScript(0x400) + Continue(0x40) + SourceFile(0x10) + Script(0x04) + Dll(0x01)
+* 
+*/
 struct CustomActionType {
     CustomActionType () {
-        memset(this, 0, sizeof(CustomActionType));
+        memset(this, 0, sizeof(CustomActionType)); // replace with default member initializers after upgrading to newer C++ version
     }
 
     /** Parse MSI CustomAction "Type" column. */
     CustomActionType (int val) {
         (int&)(*this) = val;
-    }
-
-    bool HasFields (const CustomActionType other) const {
-        // Wix custom actions:
-        // Type 65   (0x41)  =                                            Continue (0x40)                    + Dll (0x01)
-
-        // Custom EXE register:
-        // Type 3106 (0xC22) = NoImpersonate (0x800) + InScript (0x400)                   + Directory (0x20) + Exe (0x02) // Type 34 run executable
-        // Type 3170 (0xC62) = NoImpersonate (0x800) + InScript (0x400) + Continue (0x40) + Directory (0x20) + Exe (0x02)
-
-        return (int)(*this) & (int)other;
     }
 
     std::wstring ToString() const {
