@@ -62,7 +62,7 @@ std::wstring ParseMSIOrProductCodeOrUpgradeCode (std::wstring file_or_code) {
 }
 
 
-bool ParseInstalledApp (std::wstring product_code) {
+bool ParseInstalledApp (std::wstring product_code, bool list_files) {
     std::wstring msi_cache_file;
     try {
         // installation details
@@ -97,7 +97,7 @@ bool ParseInstalledApp (std::wstring product_code) {
     {
         // custom action query
         auto custom_actions = query.QueryIS(L"SELECT `Type`,`Target` FROM `CustomAction`");
-        for (auto& ca : custom_actions) {
+        for (const auto& ca : custom_actions) {
             if (!ca.first.NoImpersonate)
                 continue; // discard custom actions that does not run as admin
             if (!ca.first.InScript)
@@ -118,13 +118,17 @@ bool ParseInstalledApp (std::wstring product_code) {
 
         for (const auto& cmp : components) {
             auto path = GetComponentPath(product_code, cmp.second);
-            if (to_lowercase(path).find(L".exe") != path.npos)
-                std::wcout << L"installed EXE: " << path << L'\n';
+            if (to_lowercase(path).find(L".exe") == path.npos)
+                continue; // filter out non-EXE files
+
+            std::wcout << L"installed EXE: " << path << L'\n';
         }
-    }{
+    }
+    
+    if (list_files) {
         // file query
         auto files = query.QuerySS(L"SELECT `File`,`FileName` FROM `File`");
-        for (auto& file : files) {
+        for (const auto& file : files) {
             std::wcout << L"File: " << file.first << L", " << file.second << L'\n';
         }
     }
@@ -146,7 +150,7 @@ int wmain (int argc, wchar_t *argv[ ]) {
 
     try {
         auto product_code = ParseMSIOrProductCodeOrUpgradeCode(argv[1]);
-        if(!ParseInstalledApp(product_code)) {
+        if(!ParseInstalledApp(product_code, false)) {
             std::wcout << L"ProductCode is NOT installed.\n";
             return 0;
         }
