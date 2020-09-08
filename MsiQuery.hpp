@@ -125,6 +125,15 @@ struct RegEntry {
     std::wstring Component_;
 };
 
+
+struct FileEntry {
+    std::wstring File;
+    std::wstring Component_;
+    std::wstring FileName;
+    //std::wstring Filesize;
+    //...
+};
+
 /** Query an installed MSI file. 
     Based on WiCompon.vbs sample (installed under C:\Program Files (x86)\Windows Kits\10\bin\<version>\x64) */
 class MsiQuery {
@@ -157,6 +166,28 @@ public:
             auto val1 = GetRecordString(msi_record, 1);
             auto val2 = GetRecordString(msi_record, 2);
             result.push_back({val1, val2});
+        }
+
+        return result;
+    }
+
+    std::vector<FileEntry> QueryFile () {
+        PMSIHANDLE msi_view;
+        Execute(L"SELECT `File`,`Component_`,`FileName` FROM `File`", &msi_view);
+
+        std::vector<FileEntry> result;
+        while (true) {
+            PMSIHANDLE msi_record;
+            UINT ret = MsiViewFetch(msi_view, &msi_record);
+            if (ret == ERROR_NO_MORE_ITEMS)
+                break;
+            if (ret != ERROR_SUCCESS)
+                abort();
+
+            auto val1 = GetRecordString(msi_record, 1);
+            auto val2 = GetRecordString(msi_record, 2);
+            auto val3 = GetRecordString(msi_record, 3);
+            result.push_back({val1, val2, val3});
         }
 
         return result;

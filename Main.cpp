@@ -130,9 +130,9 @@ bool ParseInstalledApp (std::wstring product_code, bool list_files) {
     
     if (list_files) {
         // file query
-        auto files = query.QuerySS(L"SELECT `File`,`FileName` FROM `File`");
-        for (const auto& file : files) {
-            std::wcout << L"File: " << std::get<0>(file) << L", " << std::get<1>(file) << L'\n';
+        auto files = query.QueryFile();
+        for (const FileEntry& file : files) {
+            std::wcout << L"File: " << file.File << L", " << file.FileName << L'\n';
         }
         std::wcout << L"\n";
     }
