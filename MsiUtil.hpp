@@ -8,16 +8,24 @@
 
 
 /** Get info about a MSI product that is not neccesarily installed. */
-static std::wstring GetProductProperty (MSIHANDLE msi, const wchar_t* property) {
+static std::wstring GetProductProperty (MSIHANDLE msi, const wchar_t* property, bool throw_on_failure = true) {
     DWORD buf_len = 0;
     UINT ret = MsiGetProductProperty(msi, property, const_cast<wchar_t*>(L""), &buf_len);
-    if (ret != ERROR_MORE_DATA)
-        throw std::runtime_error("MsiGetProductProperty failed");
+    if (ret != ERROR_MORE_DATA) {
+        if (throw_on_failure)
+            throw std::runtime_error("MsiGetProductProperty failed");
+        else
+            return L"";
+    }
 
     std::wstring buffer(buf_len++, L'\0');
     ret = MsiGetProductProperty(msi, property, const_cast<wchar_t*>(buffer.data()), &buf_len);
-    if (ret != ERROR_SUCCESS)
-        throw std::runtime_error("MsiGetProductProperty failed");
+    if (ret != ERROR_SUCCESS) {
+        if (throw_on_failure)
+            throw std::runtime_error("MsiGetProductProperty failed");
+        else
+            return L"";
+    }
     return buffer;
 }
 

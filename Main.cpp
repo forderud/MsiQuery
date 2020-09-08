@@ -46,7 +46,7 @@ std::wstring ParseMSIOrProductCodeOrUpgradeCode (std::wstring file_or_code) {
     {
         // high-level metadata
         product_code = GetProductProperty(msi, L"ProductCode"); // REQUIRED
-        std::wstring upgrade_code = GetProductProperty(msi, L"UpgradeCode");
+        std::wstring upgrade_code = GetProductProperty(msi, L"UpgradeCode", false); // optional
         std::wstring product_name = GetProductProperty(msi, L"ProductName"); // REQUIRED
         std::wstring product_ver = GetProductProperty(msi, L"ProductVersion"); // REQUIRED
         std::wstring manufacturer = GetProductProperty(msi, L"Manufacturer"); // REQUIRED
