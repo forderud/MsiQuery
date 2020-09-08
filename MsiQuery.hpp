@@ -88,7 +88,10 @@ struct CustomActionType {
 };
 static_assert(sizeof(CustomActionType) == sizeof(int), "CustomActionType size mismatch");
 
-
+struct CustomActionEntry {
+    CustomActionType Type;
+    std::wstring     Target;
+};
 
 
 struct RegEntry {
@@ -159,7 +162,8 @@ public:
     /** Perform query that returns two strings per row. */
     std::vector<RegEntry> QueryRegistry () {
         PMSIHANDLE msi_view;
-        Execute(L"SELECT `Registry`,`Root`,`Key`,`Name`,`Value`,`Component_` FROM `Registry`", &msi_view);
+        if (!Execute(L"SELECT `Registry`,`Root`,`Key`,`Name`,`Value`,`Component_` FROM `Registry`", &msi_view))
+            return {}; // table not found
 
         std::vector<RegEntry> result;
         while (true) {
@@ -183,11 +187,11 @@ public:
     }
 
     /** Perform query that returns an int and string per row. */
-    std::vector<std::tuple<CustomActionType,std::wstring>> QueryIS (const std::wstring& sql_query) {
+    std::vector<CustomActionEntry> QueryCustomAction () {
         PMSIHANDLE msi_view;
-        Execute(sql_query, &msi_view);
+        Execute(L"SELECT `Type`,`Target` FROM `CustomAction`", &msi_view);
 
-        std::vector<std::tuple<CustomActionType,std::wstring>> result;
+        std::vector<CustomActionEntry> result;
         while (true) {
             PMSIHANDLE msi_record;
             UINT ret = MsiViewFetch(msi_view, &msi_record);
@@ -205,14 +209,18 @@ public:
     }
 
 private:
-    void Execute (const std::wstring& sql_query, MSIHANDLE* view) {
+    bool Execute (const std::wstring& sql_query, MSIHANDLE* view) {
         UINT ret = MsiDatabaseOpenView(m_db, sql_query.c_str(), view);
+        if (ret == ERROR_BAD_QUERY_SYNTAX)
+            return false; // table not found
         if (ret != ERROR_SUCCESS)
             abort();
 
         ret = MsiViewExecute(*view, NULL);
         if (ret != ERROR_SUCCESS)
             abort();
+
+        return true;
     }
 
     static std::wstring GetRecordString(MSIHANDLE record, unsigned int field) {

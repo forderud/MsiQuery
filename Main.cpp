@@ -96,14 +96,14 @@ bool ParseInstalledApp (std::wstring product_code, bool list_files) {
 
     {
         // custom action query
-        auto custom_actions = query.QueryIS(L"SELECT `Type`,`Target` FROM `CustomAction`");
-        for (const auto& ca : custom_actions) {
-            if (!std::get<0>(ca).NoImpersonate)
+        auto custom_actions = query.QueryCustomAction();
+        for (const CustomActionEntry& ca : custom_actions) {
+            if (!ca.Type.NoImpersonate)
                 continue; // discard custom actions that does not run as admin
-            if (!std::get<0>(ca).InScript)
+            if (!ca.Type.InScript)
                 continue; // discard custom actions that are not scripts
 
-            std::wcout << L"CustomAction: " << std::get<0>(ca).ToString() << L", " << std::get<1>(ca) << L'\n';
+            std::wcout << L"CustomAction: " << ca.Type.ToString() << L", " << ca.Target << L'\n';
         }
         std::wcout << L"\n";
     }
