@@ -89,8 +89,11 @@ struct CustomActionType {
 static_assert(sizeof(CustomActionType) == sizeof(int), "CustomActionType size mismatch");
 
 struct CustomActionEntry {
+    std::wstring     Action;
     CustomActionType Type;
+    std::wstring     Source;
     std::wstring     Target;
+    std::wstring     ExtendedType;
 };
 
 
@@ -189,7 +192,7 @@ public:
     /** Perform query that returns an int and string per row. */
     std::vector<CustomActionEntry> QueryCustomAction () {
         PMSIHANDLE msi_view;
-        Execute(L"SELECT `Type`,`Target` FROM `CustomAction`", &msi_view);
+        Execute(L"SELECT `Action`,`Type`,`Source`,`Target`,`ExtendedType` FROM `CustomAction`", &msi_view);
 
         std::vector<CustomActionEntry> result;
         while (true) {
@@ -200,9 +203,12 @@ public:
             if (ret != ERROR_SUCCESS)
                 abort();
 
-            auto val1 = GetRecordInt(msi_record, 1);
-            auto val2 = GetRecordString(msi_record, 2);
-            result.push_back({val1, val2});
+            auto val1 = GetRecordString(msi_record, 1);
+            auto val2 = GetRecordInt(msi_record, 2);
+            auto val3 = GetRecordString(msi_record, 3);
+            auto val4 = GetRecordString(msi_record, 4);
+            auto val5 = GetRecordString(msi_record, 5);
+            result.push_back({val1, val2, val3, val4, val5});
         }
 
         return result;
