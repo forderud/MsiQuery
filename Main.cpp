@@ -139,9 +139,9 @@ bool ParseInstalledApp (std::wstring product_code, bool list_files) {
 
     {
         // registry query
-        auto reg_entries = query.QueryISSS(L"SELECT `Root`,`Key`,`Name`,`Value` FROM `Registry`");
-        for (const auto& reg : reg_entries) {
-            std::wcout << L"Registry: " << ToString(std::get<0>(reg)) << L", " << std::get<1>(reg) << L", " << std::get<2>(reg) << L", " << std::get<3>(reg) << L'\n';
+        auto reg_entries = query.QueryRegistry();
+        for (const RegEntry& reg : reg_entries) {
+            std::wcout << L"Registry: " << reg.RootStr() << L", " << reg.Key << L", " << reg.Name << L", " << reg.Value << L'\n';
         }
         std::wcout << L"\n";
     }

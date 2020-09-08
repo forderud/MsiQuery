@@ -89,24 +89,33 @@ struct CustomActionType {
 static_assert(sizeof(CustomActionType) == sizeof(int), "CustomActionType size mismatch");
 
 
-enum class RegType : int {
-    Dynamic = -1,
-    ClassesRoot = 0,
-    CurrentUser = 1,
-    LocalMachine = 2,
-    Users = 3,
-};
 
-std::wstring ToString (RegType type) {
-    switch (type) {
-    case RegType::Dynamic: return L"Dynamic";
-    case RegType::ClassesRoot: return L"ClassesRoot";
-    case RegType::CurrentUser: return L"CurrentUser";
-    case RegType::LocalMachine: return L"LocalMachine";
-    case RegType::Users: return L"Users";
+
+struct RegEntry {
+    enum RootType : int {
+        Dynamic      = -1,// HKEY_CURRENT_USER or HKEY_LOCAL_MACHINE, depending on ALLUSERS
+        ClassesRoot  = 0, // HKEY_CLASSES_ROOT
+        CurrentUser  = 1, // HKEY_CURRENT_USER
+        LocalMachine = 2, // HKEY_LOCAL_MACHINE
+        Users        = 3, // HKEY_USERS
+    };
+
+    std::wstring RootStr () const {
+        switch (Root) {
+        case Dynamic: return L"Dynamic";
+        case ClassesRoot: return L"ClassesRoot";
+        case CurrentUser: return L"CurrentUser";
+        case LocalMachine: return L"LocalMachine";
+        case Users: return L"Users";
+        }
+        abort(); // should never be reached
     }
-    abort(); // should never be reached
-}
+
+    RootType     Root;
+    std::wstring Key;
+    std::wstring Name;
+    std::wstring Value;
+};
 
 /** Query an installed MSI file. 
     Based on WiCompon.vbs sample (installed under C:\Program Files (x86)\Windows Kits\10\bin\<version>\x64) */
@@ -146,11 +155,11 @@ public:
     }
 
     /** Perform query that returns two strings per row. */
-    std::vector<std::tuple<RegType,std::wstring,std::wstring,std::wstring>> QueryISSS (std::wstring sql_query) {
+    std::vector<RegEntry> QueryRegistry () {
         PMSIHANDLE msi_view;
-        Execute(sql_query, &msi_view);
+        Execute(L"SELECT `Root`,`Key`,`Name`,`Value` FROM `Registry`", &msi_view);
 
-        std::vector<std::tuple<RegType,std::wstring,std::wstring,std::wstring>> result;
+        std::vector<RegEntry> result;
         while (true) {
             PMSIHANDLE msi_record;
             UINT ret = MsiViewFetch(msi_view, &msi_record);
@@ -159,11 +168,11 @@ public:
             if (ret != ERROR_SUCCESS)
                 abort();
 
-            auto val1 = GetRecordInt(msi_record, 1);
+            auto val1 = static_cast<RegEntry::RootType>(GetRecordInt(msi_record, 1));
             auto val2 = GetRecordString(msi_record, 2);
             auto val3 = GetRecordString(msi_record, 3);
             auto val4 = GetRecordString(msi_record, 4);
-            result.push_back({static_cast<RegType>(val1), val2, val3, val4});
+            result.push_back({val1, val2, val3, val4});
         }
 
         return result;
