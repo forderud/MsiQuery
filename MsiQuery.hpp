@@ -296,14 +296,14 @@ private:
 };
 
 
-static std::wstring GetTargetPath (MSIHANDLE msi, const wchar_t* folder) {
+static std::wstring GetTargetPath (MSIHANDLE msi, const std::wstring& folder) {
     DWORD buf_len = 0;
-    UINT ret = MsiGetTargetPath(msi, folder, const_cast<wchar_t*>(L""), &buf_len);
+    UINT ret = MsiGetTargetPath(msi, folder.c_str(), const_cast<wchar_t*>(L""), &buf_len);
     if (ret != ERROR_MORE_DATA)
         throw std::runtime_error("MsiGetTargetPath failed");
 
     std::wstring buffer(buf_len++, L'\0'); 
-    ret = MsiGetTargetPath(msi, folder, const_cast<wchar_t*>(buffer.data()), &buf_len);
+    ret = MsiGetTargetPath(msi, folder.c_str(), const_cast<wchar_t*>(buffer.data()), &buf_len);
     if (ret != ERROR_SUCCESS)
         throw std::runtime_error("MsiGetTargetPath failed");
 
