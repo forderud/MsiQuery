@@ -49,11 +49,12 @@ std::wstring ParseMSIOrProductCodeOrUpgradeCode (std::wstring file_or_code) {
         std::wstring upgrade_code = GetProductProperty(msi, L"UpgradeCode");
         std::wstring product_name = GetProductProperty(msi, L"ProductName"); // REQUIRED
         std::wstring product_ver = GetProductProperty(msi, L"ProductVersion"); // REQUIRED
+        std::wstring manufacturer = GetProductProperty(msi, L"Manufacturer"); // REQUIRED
         std::wcout << L"MSI metadata for " << file_or_code << L":\n";
         std::wcout << L"ProductCode: " << product_code << L"\n";
         std::wcout << L"UpgradeCode: " << upgrade_code << L"\n";
-        std::wcout << L"ProductName: " << product_name << L"\n";
-        std::wcout << L"ProductVersion: " << product_ver << L"\n";
+        std::wcout << L"ProductName: " << product_name << L" (" << product_ver << L")\n";
+        std::wcout << L"Manufacturer: " << manufacturer << L"\n";
     }
 
     return product_code;
