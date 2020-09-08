@@ -24,15 +24,19 @@ std::wstring ParseMSIOrProductCodeOrUpgradeCode (std::wstring file_or_code) {
     if (file_or_code[0] == L'{') {
         // check if input is UpgradeCode
         auto product_code = GetProductCode(file_or_code);
-        if (!product_code.empty())
+        if (!product_code.empty()) {
+            std::wcout << L"UpgradeCode " << file_or_code << L" is associated with ProductCode " << product_code << L"\n";
             file_or_code = product_code;
+        }
 
         // input is a ProductCode
+        std::wcout << L"Attempting to open ProductCode " << file_or_code << L"...\n";
         UINT ret = MsiOpenProduct(file_or_code.c_str(), &msi);
         if (ret != ERROR_SUCCESS)
             throw std::runtime_error("MsiOpenPackage failed");
     } else {
         // input is a MSI filename
+        std::wcout << L"Attempting to open file " << file_or_code << L"...\n";
         UINT ret = MsiOpenPackage(file_or_code.c_str(), &msi);
         if (ret != ERROR_SUCCESS)
             throw std::runtime_error("MsiOpenPackage failed");
@@ -41,13 +45,15 @@ std::wstring ParseMSIOrProductCodeOrUpgradeCode (std::wstring file_or_code) {
     std::wstring product_code;
     {
         // high-level metadata
-        product_code = GetProductProperty(msi, L"ProductCode");
+        product_code = GetProductProperty(msi, L"ProductCode"); // REQUIRED
         std::wstring upgrade_code = GetProductProperty(msi, L"UpgradeCode");
-        std::wstring product_name = GetProductProperty(msi, L"ProductName");
+        std::wstring product_name = GetProductProperty(msi, L"ProductName"); // REQUIRED
+        std::wstring product_ver = GetProductProperty(msi, L"ProductVersion"); // REQUIRED
         std::wcout << L"MSI metadata for " << file_or_code << L":\n";
         std::wcout << L"ProductCode: " << product_code << L"\n";
         std::wcout << L"UpgradeCode: " << upgrade_code << L"\n";
         std::wcout << L"ProductName: " << product_name << L"\n";
+        std::wcout << L"ProductVersion: " << product_ver << L"\n";
     }
 
     return product_code;
