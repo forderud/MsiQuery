@@ -105,11 +105,11 @@ public:
     }
 
     /** Perform query that returns two strings per row. */
-    std::vector<std::pair<std::wstring,std::wstring>> QuerySS (std::wstring sql_query) {
+    std::vector<std::tuple<std::wstring,std::wstring>> QuerySS (std::wstring sql_query) {
         PMSIHANDLE msi_view;
         Execute(sql_query, &msi_view);
 
-        std::vector<std::pair<std::wstring,std::wstring>> result;
+        std::vector<std::tuple<std::wstring,std::wstring>> result;
         while (true) {
             PMSIHANDLE msi_record;
             UINT ret = MsiViewFetch(msi_view, &msi_record);
@@ -151,11 +151,11 @@ public:
     }
 
     /** Perform query that returns an int and string per row. */
-    std::vector<std::pair<CustomActionType,std::wstring>> QueryIS (const std::wstring& sql_query) {
+    std::vector<std::tuple<CustomActionType,std::wstring>> QueryIS (const std::wstring& sql_query) {
         PMSIHANDLE msi_view;
         Execute(sql_query, &msi_view);
 
-        std::vector<std::pair<CustomActionType,std::wstring>> result;
+        std::vector<std::tuple<CustomActionType,std::wstring>> result;
         while (true) {
             PMSIHANDLE msi_record;
             UINT ret = MsiViewFetch(msi_view, &msi_record);

@@ -58,4 +58,3 @@ static std::wstring GetComponentPath (const std::wstring& product, const std::ws
     assert(ret == INSTALLSTATE_LOCAL);
     return buffer;
 }
-

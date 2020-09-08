@@ -98,14 +98,16 @@ bool ParseInstalledApp (std::wstring product_code, bool list_files) {
         // custom action query
         auto custom_actions = query.QueryIS(L"SELECT `Type`,`Target` FROM `CustomAction`");
         for (const auto& ca : custom_actions) {
-            if (!ca.first.NoImpersonate)
+            if (!std::get<0>(ca).NoImpersonate)
                 continue; // discard custom actions that does not run as admin
-            if (!ca.first.InScript)
+            if (!std::get<0>(ca).InScript)
                 continue; // discard custom actions that are not scripts
 
-            std::wcout << L"CustomAction: " << ca.first.ToString() << L", " << ca.second << L'\n';
+            std::wcout << L"CustomAction: " << std::get<0>(ca).ToString() << L", " << std::get<1>(ca) << L'\n';
         }
-    }{
+        std::wcout << L"\n";
+    }
+    {
         // component query
         auto components = query.QuerySS(L"SELECT `Component`,`ComponentId` FROM `Component`");
 
@@ -117,35 +119,38 @@ bool ParseInstalledApp (std::wstring product_code, bool list_files) {
         };
 
         for (const auto& cmp : components) {
-            auto path = GetComponentPath(product_code, cmp.second);
+            auto path = GetComponentPath(product_code, std::get<1>(cmp));
             if (to_lowercase(path).find(L".exe") == path.npos)
                 continue; // filter out non-EXE files
 
             std::wcout << L"installed EXE: " << path << L'\n';
         }
+        std::wcout << L"\n";
     }
     
     if (list_files) {
         // file query
         auto files = query.QuerySS(L"SELECT `File`,`FileName` FROM `File`");
         for (const auto& file : files) {
-            std::wcout << L"File: " << file.first << L", " << file.second << L'\n';
+            std::wcout << L"File: " << std::get<0>(file) << L", " << std::get<1>(file) << L'\n';
         }
+        std::wcout << L"\n";
     }
 
     {
         // registry query
         auto reg_entries = query.QueryISSS(L"SELECT `Root`,`Key`,`Name`,`Value` FROM `Registry`");
-        for (const auto& reg : reg_entries ) {
+        for (const auto& reg : reg_entries) {
             std::wcout << L"Registry: " << std::get<0>(reg) << L", " << std::get<1>(reg) << L", " << std::get<2>(reg) << L", " << std::get<3>(reg) << L'\n';
         }
+        std::wcout << L"\n";
     }
 
     return true;
 }
 
 
-int wmain (int argc, wchar_t *argv[ ]) {
+int wmain (int argc, wchar_t *argv[]) {
     if (argc < 2) {
         std::wcout << L"Usage: " << argv[0] << L" [<filename.msi>|{ProductCode}|{UpgradeCode}]\n";
         return 1;
