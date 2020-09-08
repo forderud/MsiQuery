@@ -111,10 +111,12 @@ struct RegEntry {
         abort(); // should never be reached
     }
 
+    std::wstring Registry;
     RootType     Root;
     std::wstring Key;
     std::wstring Name;
     std::wstring Value;
+    std::wstring Component_;
 };
 
 /** Query an installed MSI file. 
@@ -157,7 +159,7 @@ public:
     /** Perform query that returns two strings per row. */
     std::vector<RegEntry> QueryRegistry () {
         PMSIHANDLE msi_view;
-        Execute(L"SELECT `Root`,`Key`,`Name`,`Value` FROM `Registry`", &msi_view);
+        Execute(L"SELECT `Registry`,`Root`,`Key`,`Name`,`Value`,`Component_` FROM `Registry`", &msi_view);
 
         std::vector<RegEntry> result;
         while (true) {
@@ -168,11 +170,13 @@ public:
             if (ret != ERROR_SUCCESS)
                 abort();
 
-            auto val1 = static_cast<RegEntry::RootType>(GetRecordInt(msi_record, 1));
-            auto val2 = GetRecordString(msi_record, 2);
+            auto val1 = GetRecordString(msi_record, 1);
+            auto val2 = static_cast<RegEntry::RootType>(GetRecordInt(msi_record, 2));
             auto val3 = GetRecordString(msi_record, 3);
             auto val4 = GetRecordString(msi_record, 4);
-            result.push_back({val1, val2, val3, val4});
+            auto val5 = GetRecordString(msi_record, 5);
+            auto val6 = GetRecordString(msi_record, 6);
+            result.push_back({val1, val2, val3, val5, val6});
         }
 
         return result;
