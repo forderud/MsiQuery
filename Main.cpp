@@ -44,13 +44,13 @@ std::wstring ParseMSIOrProductCodeOrUpgradeCode (std::wstring file_or_code) {
 
     std::wstring product_code;
     {
-        // high-level metadata
+        // read properties
         product_code = GetProductProperty(msi, L"ProductCode"); // REQUIRED
         std::wstring upgrade_code = GetProductProperty(msi, L"UpgradeCode", false); // optional
         std::wstring product_name = GetProductProperty(msi, L"ProductName"); // REQUIRED
         std::wstring product_ver = GetProductProperty(msi, L"ProductVersion"); // REQUIRED
         std::wstring manufacturer = GetProductProperty(msi, L"Manufacturer"); // REQUIRED
-        std::wcout << L"MSI metadata for " << file_or_code << L":\n";
+        std::wcout << L"MSI properties:\n";
         std::wcout << L"ProductCode: " << product_code << L"\n";
         std::wcout << L"UpgradeCode: " << upgrade_code << L"\n";
         std::wcout << L"ProductName: " << product_name << L" (" << product_ver << L")\n";
@@ -78,8 +78,12 @@ bool ParseInstalledApp (std::wstring product_code) {
         std::wstring inst_loc = GetProductInfo(product_code.c_str(), INSTALLPROPERTY_INSTALLLOCATION); // seem to be empty
         //std::wstring inst_folder = GetProductInfo(product_code.c_str(), L"INSTALLFOLDER"); // not found
         std::wstring prod_id = GetProductInfo(product_code.c_str(), INSTALLPROPERTY_PRODUCTID); // seem to be empty
-    }
 
+        std::wstring inst_name = GetProductInfo(product_code.c_str(), INSTALLPROPERTY_INSTALLEDPRODUCTNAME); // seem identical to ProductName
+        std::wstring publisher = GetProductInfo(product_code.c_str(), INSTALLPROPERTY_PUBLISHER); // seem identical to Manufacturer
+        std::wstring version = GetProductInfo(product_code.c_str(), INSTALLPROPERTY_VERSIONSTRING); // seem identical to ProductVersion
+        std::wstring inst_date = GetProductInfo(product_code.c_str(), INSTALLPROPERTY_INSTALLDATE); // "YYYYMMDD" format
+    }
 
     MsiQuery query(msi_cache_file);
 
