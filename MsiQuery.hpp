@@ -158,7 +158,7 @@ public:
     ~MsiQuery() {
     }
 
-    /** Perform query that returns two strings per row. */
+    /** Query Component table. */
     std::vector<ComponentEntry> QueryComponent () {
         PMSIHANDLE msi_view;
         Execute(L"SELECT `Component`,`ComponentId`,`Directory_` FROM `Component`", &msi_view);
@@ -181,6 +181,7 @@ public:
         return result;
     }
 
+    /** Query File table. */
     std::vector<FileEntry> QueryFile () {
         PMSIHANDLE msi_view;
         Execute(L"SELECT `File`,`Component_`,`FileName` FROM `File`", &msi_view);
@@ -203,7 +204,7 @@ public:
         return result;
     }
 
-    /** Perform query that returns two strings per row. */
+    /** Query Registry table. */
     std::vector<RegEntry> QueryRegistry () {
         PMSIHANDLE msi_view;
         if (!Execute(L"SELECT `Registry`,`Root`,`Key`,`Name`,`Value`,`Component_` FROM `Registry`", &msi_view))
@@ -230,7 +231,7 @@ public:
         return result;
     }
 
-    /** Perform query that returns an int and string per row. */
+    /** Query CustomAction table. */
     std::vector<CustomActionEntry> QueryCustomAction () {
         PMSIHANDLE msi_view;
         Execute(L"SELECT `Action`,`Type`,`Source`,`Target`,`ExtendedType` FROM `CustomAction`", &msi_view);
