@@ -97,6 +97,7 @@ struct CustomActionEntry {
 };
 
 
+/** https://docs.microsoft.com/en-us/windows/win32/msi/registry-table */
 struct RegEntry {
     enum RootType : int {
         Dynamic      = -1,// HKEY_CURRENT_USER or HKEY_LOCAL_MACHINE, depending on ALLUSERS
