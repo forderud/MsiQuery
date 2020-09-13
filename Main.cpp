@@ -104,23 +104,22 @@ bool ParseInstalledApp (std::wstring product_code) {
     MsiQuery query(msi_cache_file);
 
     {
-        // custom action query
+        std::wcout << L"Custom actions that might affect system state:\n";
+        //REF: https://docs.microsoft.com/en-us/windows/win32/msi/changing-the-system-state-using-a-custom-action
+
         auto custom_actions = query.QueryCustomAction();
         for (const CustomActionEntry& ca : custom_actions) {
-            if (!ca.Type.NoImpersonate)
-                continue; // discard custom actions that does not run as admin
-            if (!ca.Type.Deferred)
-                continue; // discard custom actions that are not deferred
+            if (!ca.Type.NoImpersonate && !ca.Type.Deferred)
+                continue; // discard custom actions that neither run as admin nor are deferred
 
             std::wcout << L"CustomAction: " << ca.Type.ToString() << L", " << ca.Target << L'\n';
         }
         std::wcout << L"\n";
     }
 
-    // component query
-    std::vector<ComponentEntry> components = query.QueryComponent();
-
     {
+        std::wcout << L"Installed EXE files:\n";
+
         // convert string to lowercase
         auto to_lowercase = [](std::wstring str) {
             std::transform(str.begin(), str.end(), str.begin(),
@@ -128,7 +127,8 @@ bool ParseInstalledApp (std::wstring product_code) {
             return str;
         };
 
-        // file query
+        std::vector<ComponentEntry> components = query.QueryComponent();
+
         auto files = query.QueryFile();
         for (const FileEntry& file : files) {
             ComponentEntry cmp = FindComponent(components, file.Component_);
@@ -137,13 +137,14 @@ bool ParseInstalledApp (std::wstring product_code) {
             if (to_lowercase(path).find(L".exe") == path.npos)
                 continue; // filter out non-EXE files
 
-            std::wcout << L"installed EXE: " << path << L'\n';
+            std::wcout << L"EXE: " << path << L'\n';
         }
         std::wcout << L"\n";
     }
 
     {
-        // registry query
+        std::wcout << L"Registry entries:\n";
+
         auto reg_entries = query.QueryRegistry();
         for (const RegEntry& reg : reg_entries) {
             std::wcout << L"Registry: " << reg.RootStr() << L", " << reg.Key << L", " << reg.Name << L", " << reg.Value << L'\n';
