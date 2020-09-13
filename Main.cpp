@@ -61,8 +61,17 @@ std::wstring ParseMSIOrProductCodeOrUpgradeCode (std::wstring file_or_code) {
     return product_code;
 }
 
+static ComponentEntry FindComponent(const std::vector<ComponentEntry>& components, const std::wstring& Component_) {
+    for (const ComponentEntry& entry : components) {
+        if (Component_ == entry.Component)
+            return entry;
+    }
 
-bool ParseInstalledApp (std::wstring product_code, bool list_files) {
+    throw std::runtime_error("Unable to find ComponentEntry");
+}
+
+
+bool ParseInstalledApp (std::wstring product_code) {
     std::wstring msi_cache_file;
     try {
         // installation details
@@ -107,32 +116,28 @@ bool ParseInstalledApp (std::wstring product_code, bool list_files) {
         }
         std::wcout << L"\n";
     }
-    {
-        // component query
-        auto components = query.QueryComponent();
 
-        // Convert string to lowercase
+    // component query
+    std::vector<ComponentEntry> components = query.QueryComponent();
+
+    {
+        // convert string to lowercase
         auto to_lowercase = [](std::wstring str) {
             std::transform(str.begin(), str.end(), str.begin(),
                 [](wchar_t c){ return std::tolower(c); });
             return str;
         };
 
-        for (const ComponentEntry& cmp : components) {
+        // file query
+        auto files = query.QueryFile();
+        for (const FileEntry& file : files) {
+            ComponentEntry cmp = FindComponent(components, file.Component_);
+
             auto path = GetComponentPath(product_code, cmp.ComponentId);
             if (to_lowercase(path).find(L".exe") == path.npos)
                 continue; // filter out non-EXE files
 
             std::wcout << L"installed EXE: " << path << L'\n';
-        }
-        std::wcout << L"\n";
-    }
-    
-    if (list_files) {
-        // file query
-        auto files = query.QueryFile();
-        for (const FileEntry& file : files) {
-            std::wcout << L"File: " << file.File << L", " << file.FileName << L'\n';
         }
         std::wcout << L"\n";
     }
@@ -163,7 +168,7 @@ int wmain (int argc, wchar_t *argv[]) {
 
     try {
         auto product_code = ParseMSIOrProductCodeOrUpgradeCode(argv[1]);
-        if(!ParseInstalledApp(product_code, false)) {
+        if(!ParseInstalledApp(product_code)) {
             std::wcout << L"ProductCode is NOT installed.\n";
             return 0;
         }
