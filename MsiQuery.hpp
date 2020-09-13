@@ -148,6 +148,10 @@ struct ComponentEntry {
     int          Attributes; ///< 0x100=64bit, 0x004=RegistryKeyPath
     //std::wstring Condition;
     //std::wstring KeyPath;
+
+    bool operator < (const ComponentEntry& other) const {
+        return Component < other.Component;
+    }
 };
 
 

@@ -128,6 +128,7 @@ bool ParseInstalledApp (std::wstring product_code) {
         };
 
         std::vector<ComponentEntry> components = query.QueryComponent();
+        std::sort(components.begin(), components.end());
 
         auto files = query.QueryFile();
         for (const FileEntry& file : files) {
