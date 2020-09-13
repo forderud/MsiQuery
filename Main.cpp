@@ -61,15 +61,6 @@ std::wstring ParseMSIOrProductCodeOrUpgradeCode (std::wstring file_or_code) {
     return product_code;
 }
 
-static ComponentEntry FindComponent(const std::vector<ComponentEntry>& components, const std::wstring& Component_) {
-    for (const ComponentEntry& entry : components) {
-        if (Component_ == entry.Component)
-            return entry;
-    }
-
-    throw std::runtime_error("Unable to find ComponentEntry");
-}
-
 
 bool ParseInstalledApp (std::wstring product_code) {
     std::wstring msi_cache_file;
@@ -127,14 +118,18 @@ bool ParseInstalledApp (std::wstring product_code) {
             return str;
         };
 
+        // component listing (sorted by "Component" field for faster lookup)
         std::vector<ComponentEntry> components = query.QueryComponent();
         std::sort(components.begin(), components.end());
 
         auto files = query.QueryFile();
         for (const FileEntry& file : files) {
-            ComponentEntry cmp = FindComponent(components, file.Component_);
+            // search for matching component
+            auto component = std::lower_bound(components.begin(), components.end(), CreateComponentEntry(file.Component_));
+            if (component == components.end())
+                throw std::runtime_error("Unable to find ComponentEntry");
 
-            auto path = GetComponentPath(product_code, cmp.ComponentId);
+            auto path = GetComponentPath(product_code, component->ComponentId);
             if (to_lowercase(path).find(L".exe") == path.npos)
                 continue; // filter out non-EXE files
 

@@ -154,6 +154,12 @@ struct ComponentEntry {
     }
 };
 
+static ComponentEntry CreateComponentEntry(std::wstring Component) {
+    ComponentEntry entry;
+    entry.Component = Component;
+    return entry;
+}
+
 
 /** Query an installed MSI file. 
     Based on WiCompon.vbs sample (installed under C:\Program Files (x86)\Windows Kits\10\bin\<version>\x64) */
