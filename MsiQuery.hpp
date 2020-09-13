@@ -15,13 +15,17 @@
 * 
 *   Wix custom actions:
 *    Type 65   (0x041)  =                                                                Continue(0x40)                    + Dll(0x01) // ValidatePath, PrintEula
-*   Custom EXE register:
-*    Type 3106 (0x0C22) =                       NoImpersonate(0x800) + InScript(0x400)                  + Directory(0x20)  + Exe(0x02) // Type 34 run executable
+*   Custom DLL:
+*    Type               =                                                                                                  + Dll(0x01) // Type 1/17 run DLL
+*   Custom EXE:
+*    Type 3106 (0x0C22) =                       NoImpersonate(0x800) + InScript(0x400)                  + Directory(0x20)  + Exe(0x02) // Type 2/18/34/50 run executable
 *    Type 3170 (0x0C62) =                       NoImpersonate(0x800) + InScript(0x400) + Continue(0x40) + Directory(0x20)  + Exe(0x02)
 *   Custom JScript:
-*    Type 7189 (0x1C15) = Script64Bit(0x1000) + NoImpersonate(0x800) + InScript(0x400) +                  SourceFile(0x10) + Script(0x04) + Dll(0x01) // Type 5/21 JScript
+*    Type 7189 (0x1C15) = Script64Bit(0x1000) + NoImpersonate(0x800) + InScript(0x400) +                  SourceFile(0x10) + Script(0x04) + Dll(0x01) // Type 5/21/37/53 JScript
 *    Type 7253 (0x1C55) = Script64Bit(0x1000) + NoImpersonate(0x800) + InScript(0x400) + Continue(0x40) + SourceFile(0x10) + Script(0x04) + Dll(0x01)
-* 
+*   Custom VBScript:
+*    Type               =                                                                                                  + Script(0x04) + Exe(0x02) // Type 6/22/38/54 VBScript
+*
 */
 struct CustomActionType {
     CustomActionType () {
