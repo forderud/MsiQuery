@@ -11,9 +11,9 @@ The tool will list the following:
 * [Manufacturer](https://docs.microsoft.com/en-us/windows/win32/msi/manufacturer)
 
 In addition, the following is listed for installed apps:
-* [Custom Actions](https://docs.microsoft.com/en-us/windows/win32/msi/custom-actions) that might affect system state
-* Path to installed EXE files
-* Registry entries
+* [Custom Actions](https://docs.microsoft.com/en-us/windows/win32/msi/custom-actions) that might affect [system state](https://docs.microsoft.com/en-us/windows/win32/msi/changing-the-system-state-using-a-custom-action)
+* Path to installed EXE files (based on [File table](https://docs.microsoft.com/en-us/windows/win32/msi/file-table) query with [MsiGetComponentPath](https://docs.microsoft.com/en-us/windows/win32/api/msi/nf-msi-msigetcomponentpathw) lookup)
+* Added [registry entries](https://docs.microsoft.com/en-us/windows/win32/msi/registry-table)
 
 
 ## Suggested SW
