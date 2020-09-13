@@ -141,7 +141,7 @@ struct ComponentEntry {
     std::wstring Component;
     std::wstring ComponentId;
     std::wstring Directory_;
-    //std::wstring Attributes;
+    int          Attributes; ///< 0x100=64bit, 0x004=RegistryKeyPath
     //std::wstring Condition;
     //std::wstring KeyPath;
 };
@@ -165,7 +165,7 @@ public:
     /** Query Component table. */
     std::vector<ComponentEntry> QueryComponent () {
         PMSIHANDLE msi_view;
-        Execute(L"SELECT `Component`,`ComponentId`,`Directory_` FROM `Component`", &msi_view);
+        Execute(L"SELECT `Component`,`ComponentId`,`Directory_`,`Attributes` FROM `Component`", &msi_view);
 
         std::vector<ComponentEntry> result;
         while (true) {
@@ -179,7 +179,8 @@ public:
             auto val1 = GetRecordString(msi_record, 1);
             auto val2 = GetRecordString(msi_record, 2);
             auto val3 = GetRecordString(msi_record, 3);
-            result.push_back({val1, val2, val3});
+            auto val4 = GetRecordInt(msi_record, 4);
+            result.push_back({val1, val2, val3, val4});
         }
 
         return result;
