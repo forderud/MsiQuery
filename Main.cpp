@@ -109,8 +109,8 @@ bool ParseInstalledApp (std::wstring product_code) {
         for (const CustomActionEntry& ca : custom_actions) {
             if (!ca.Type.NoImpersonate)
                 continue; // discard custom actions that does not run as admin
-            if (!ca.Type.InScript)
-                continue; // discard custom actions that are not scripts
+            if (!ca.Type.Deferred)
+                continue; // discard custom actions that are not deferred
 
             std::wcout << L"CustomAction: " << ca.Type.ToString() << L", " << ca.Target << L'\n';
         }
