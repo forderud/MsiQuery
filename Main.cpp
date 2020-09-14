@@ -1,6 +1,8 @@
 #include "MsiQuery.hpp"
 #include "MsiUtil.hpp"
 #include <algorithm>
+#include <fcntl.h>
+#include <io.h>
 #include <cctype>
 #include <iostream>
 
@@ -168,6 +170,9 @@ void EnumerateInstalledProducts() {
 
 
 int wmain (int argc, wchar_t *argv[]) {
+    // enable unicode characters in console output
+    _setmode(_fileno(stdout), _O_U16TEXT);
+
     if (argc < 2) {
         std::wcout << L"Usage: " << argv[0] << L" [*|<filename.msi>|{ProductCode}|{UpgradeCode}]\n";
         return 1;
