@@ -68,7 +68,7 @@ bool ParseInstalledApp (std::wstring product_code, bool verbose) {
     std::wstring msi_cache_file;
     try {
         // installation details
-        //std::wstring inst_prod_code = GetProductInfo(product_code.c_str(), L"ProductCode");
+        //std::wstring inst_prod_code = GetProductInfo(product_code, L"ProductCode");
         //assert(inst_prod_code == product_code);
 
         msi_cache_file = GetProductInfo(product_code, INSTALLPROPERTY_LOCALPACKAGE); // Local cached package
