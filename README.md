@@ -1,7 +1,7 @@
 # MsiQuery
 C++ tool for querying MSI files and installed Windows apps
 
-Usage: `MsiQuery.exe [<filename.msi>|{ProductCode}|{UpgradeCode}]`
+Usage: `MsiQuery.exe [*|<filename.msi>|{ProductCode}|{UpgradeCode}]`
 
 The tool will list the following:
 * [ProductCode](https://docs.microsoft.com/en-us/windows/win32/msi/productcode)

@@ -154,9 +154,22 @@ bool ParseInstalledApp (std::wstring product_code, bool verbose) {
 }
 
 
+void EnumerateInstalledProducts() {
+    for (DWORD idx = 0;; ++idx) {
+        wchar_t buffer[39] = {};
+        UINT ret = MsiEnumProducts(idx, buffer);
+        if (ret == ERROR_NO_MORE_ITEMS)
+            break;
+        assert(ret == ERROR_SUCCESS);
+
+        ParseInstalledApp(buffer, false);
+    }
+}
+
+
 int wmain (int argc, wchar_t *argv[]) {
     if (argc < 2) {
-        std::wcout << L"Usage: " << argv[0] << L" [<filename.msi>|{ProductCode}|{UpgradeCode}]\n";
+        std::wcout << L"Usage: " << argv[0] << L" [*|<filename.msi>|{ProductCode}|{UpgradeCode}]\n";
         return 1;
     }
 
@@ -166,10 +179,15 @@ int wmain (int argc, wchar_t *argv[]) {
     MsiSetInternalUI(INSTALLUILEVEL_NONE, nullptr);
 
     try {
-        auto product_code = ParseMSIOrProductCodeOrUpgradeCode(argv[1]);
-        if(!ParseInstalledApp(product_code, true)) {
-            std::wcout << L"ProductCode is NOT installed.\n";
-            return 0;
+        std::wstring argument = argv[1];
+        if (argument == L"*") {
+            EnumerateInstalledProducts();
+        } else {
+            auto product_code = ParseMSIOrProductCodeOrUpgradeCode(argument);
+            if (!ParseInstalledApp(product_code, true)) {
+                std::wcout << L"ProductCode is NOT installed.\n";
+                return 0;
+            }
         }
     } catch (std::exception & e) {
         std::cerr << "ERROR: " << e.what() << std::endl;
