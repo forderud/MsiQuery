@@ -164,6 +164,7 @@ void EnumerateInstalledProducts() {
             break;
         assert(ret == ERROR_SUCCESS);
 
+        std::wcout << idx << L": ";
         ParseInstalledApp(buffer, false);
     }
 }
