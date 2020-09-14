@@ -70,8 +70,7 @@ bool ParseInstalledApp (std::wstring product_code) {
         //assert(inst_prod_code == product_code);
 
         msi_cache_file = GetProductInfo(product_code.c_str(), INSTALLPROPERTY_LOCALPACKAGE); // Local cached package
-    } catch (const std::exception & e) {
-        e;
+    } catch (const std::exception &) {
         return false; // doesn't appear to be installed
     }
 
