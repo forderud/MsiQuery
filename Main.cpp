@@ -62,7 +62,7 @@ std::wstring ParseMSIOrProductCodeOrUpgradeCode (std::wstring file_or_code) {
 }
 
 
-bool ParseInstalledApp (std::wstring product_code) {
+bool ParseInstalledApp (std::wstring product_code, bool verbose) {
     std::wstring msi_cache_file;
     try {
         // installation details
@@ -90,6 +90,9 @@ bool ParseInstalledApp (std::wstring product_code) {
         std::wcout << L"InstallDate: " << inst_date << L"\n";
         std::wcout << L"\n";
     }
+
+    if (!verbose)
+        return true;
 
     MsiQuery query(msi_cache_file);
 
@@ -164,7 +167,7 @@ int wmain (int argc, wchar_t *argv[]) {
 
     try {
         auto product_code = ParseMSIOrProductCodeOrUpgradeCode(argv[1]);
-        if(!ParseInstalledApp(product_code)) {
+        if(!ParseInstalledApp(product_code, true)) {
             std::wcout << L"ProductCode is NOT installed.\n";
             return 0;
         }
