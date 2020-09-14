@@ -71,20 +71,20 @@ bool ParseInstalledApp (std::wstring product_code, bool verbose) {
         //std::wstring inst_prod_code = GetProductInfo(product_code.c_str(), L"ProductCode");
         //assert(inst_prod_code == product_code);
 
-        msi_cache_file = GetProductInfo(product_code.c_str(), INSTALLPROPERTY_LOCALPACKAGE); // Local cached package
+        msi_cache_file = GetProductInfo(product_code, INSTALLPROPERTY_LOCALPACKAGE); // Local cached package
     } catch (const std::exception &) {
         return false; // doesn't appear to be installed
     }
 
     {
-        std::wstring inst_loc = GetProductInfo(product_code.c_str(), INSTALLPROPERTY_INSTALLLOCATION); // seem to be empty
-        //std::wstring inst_folder = GetProductInfo(product_code.c_str(), L"INSTALLFOLDER"); // not found
-        std::wstring prod_id = GetProductInfo(product_code.c_str(), INSTALLPROPERTY_PRODUCTID); // seem to be empty
+        std::wstring inst_loc = GetProductInfo(product_code, INSTALLPROPERTY_INSTALLLOCATION); // seem to be empty
+        //std::wstring inst_folder = GetProductInfo(product_code, L"INSTALLFOLDER"); // not found
+        std::wstring prod_id = GetProductInfo(product_code, INSTALLPROPERTY_PRODUCTID); // seem to be empty
 
-        std::wstring inst_name = GetProductInfo(product_code.c_str(), INSTALLPROPERTY_INSTALLEDPRODUCTNAME); // seem identical to ProductName
-        std::wstring publisher = GetProductInfo(product_code.c_str(), INSTALLPROPERTY_PUBLISHER); // seem identical to Manufacturer
-        std::wstring version = GetProductInfo(product_code.c_str(), INSTALLPROPERTY_VERSIONSTRING); // seem identical to ProductVersion
-        std::wstring inst_date = GetProductInfo(product_code.c_str(), INSTALLPROPERTY_INSTALLDATE); // "YYYYMMDD" format
+        std::wstring inst_name = GetProductInfo(product_code, INSTALLPROPERTY_INSTALLEDPRODUCTNAME); // seem identical to ProductName
+        std::wstring publisher = GetProductInfo(product_code, INSTALLPROPERTY_PUBLISHER); // seem identical to Manufacturer
+        std::wstring version = GetProductInfo(product_code, INSTALLPROPERTY_VERSIONSTRING); // seem identical to ProductVersion
+        std::wstring inst_date = GetProductInfo(product_code, INSTALLPROPERTY_INSTALLDATE); // "YYYYMMDD" format
 
         std::wcout << L"Installed properties:\n";
         std::wcout << L"InstalledProductName: " << inst_name << L" (" << version << L")\n";
