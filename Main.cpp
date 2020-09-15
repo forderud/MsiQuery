@@ -158,7 +158,13 @@ void EnumerateInstalledProducts() {
         assert(ret == ERROR_SUCCESS);
 
         std::wcout << idx << L": ";
-        ParseInstalledApp(product_code, false);
+#ifndef EXTENDED_INFO
+        ParseInstalledApp(product_code, false); // faster, but less info
+#else
+        try {
+            ParseMSIOrProductCode(product_code); // slower, but also gives UpgradeCode
+        } catch (const std::exception &) {/*discard errors*/}
+#endif
     }
 }
 
