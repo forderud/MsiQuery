@@ -21,25 +21,18 @@ static std::wstring GetProductCode (const std::wstring& upgrade_code) {
 }
 
 
-std::wstring ParseMSIOrProductCodeOrUpgradeCode (std::wstring file_or_code) {
+std::wstring ParseMSIOrProductCode (std::wstring file_or_product) {
     PMSIHANDLE msi;
-    if (file_or_code[0] == L'{') {
-        // check if input is UpgradeCode
-        auto product_code = GetProductCode(file_or_code);
-        if (!product_code.empty()) {
-            std::wcout << L"UpgradeCode " << file_or_code << L" is associated with ProductCode " << product_code << L"\n";
-            file_or_code = product_code;
-        }
-
+    if (file_or_product[0] == L'{') {
         // input is a ProductCode
-        std::wcout << L"Attempting to open ProductCode " << file_or_code << L"...\n";
-        UINT ret = MsiOpenProduct(file_or_code.c_str(), &msi);
+        std::wcout << L"Attempting to open ProductCode " << file_or_product << L"...\n";
+        UINT ret = MsiOpenProduct(file_or_product.c_str(), &msi);
         if (ret != ERROR_SUCCESS)
             throw std::runtime_error("MsiOpenPackage failed");
     } else {
         // input is a MSI filename
-        std::wcout << L"Attempting to open file " << file_or_code << L"...\n";
-        UINT ret = MsiOpenPackage(file_or_code.c_str(), &msi);
+        std::wcout << L"Attempting to open file " << file_or_product << L"...\n";
+        UINT ret = MsiOpenPackage(file_or_product.c_str(), &msi);
         if (ret != ERROR_SUCCESS)
             throw std::runtime_error("MsiOpenPackage failed");
     }
@@ -189,7 +182,14 @@ int wmain (int argc, wchar_t *argv[]) {
         if (argument == L"*") {
             EnumerateInstalledProducts();
         } else {
-            auto product_code = ParseMSIOrProductCodeOrUpgradeCode(argument);
+            // check if input is UpgradeCode
+            auto product_code = GetProductCode(argument);
+            if (!product_code.empty()) {
+                std::wcout << L"UpgradeCode " << argument << L" is associated with ProductCode " << product_code << L"\n";
+                argument = product_code;
+            }
+
+            product_code = ParseMSIOrProductCode(argument);
             if (!ParseInstalledApp(product_code, true)) {
                 std::wcout << L"ProductCode is NOT installed.\n";
                 return 0;
