@@ -83,6 +83,7 @@ bool ParseInstalledApp (std::wstring product_code, bool verbose) {
         std::wcout << L"InstalledProductName: " << inst_name << L" (" << version << L")\n";
         std::wcout << L"Publisher: " << publisher << L"\n";
         std::wcout << L"InstallDate: " << inst_date << L"\n";
+        std::wcout << L"MSI cache: " << msi_cache_file << L"\n";
         std::wcout << L"\n";
     }
 
