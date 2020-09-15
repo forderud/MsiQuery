@@ -150,6 +150,8 @@ bool ParseInstalledApp (std::wstring product_code, bool verbose) {
 
 
 void EnumerateInstalledProducts() {
+    std::wcout << L"List of installed products:\n";
+
     for (DWORD idx = 0;; ++idx) {
         std::wstring product_code(38, L'\0'); // fixed length
         UINT ret = MsiEnumProducts(idx, const_cast<wchar_t*>(product_code.data()));
