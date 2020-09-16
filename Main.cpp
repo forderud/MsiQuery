@@ -9,18 +9,6 @@
 #pragma comment(lib, "Msi.lib")
 
 
-/** Returns the first ProductCode associated with a given UpgradeCode. */
-static std::wstring GetProductCode (const std::wstring& upgrade_code) {
-    std::wstring buffer(38, L'\0'); // fixed length
-    DWORD idx = 0;
-    UINT ret = MsiEnumRelatedProducts(upgrade_code.c_str(), NULL, idx, const_cast<wchar_t*>(buffer.data()));
-    if (ret != ERROR_SUCCESS)
-        return L""; // none found
-
-    return buffer;
-}
-
-
 std::wstring ParseMSIOrProductCode (std::wstring file_or_product) {
     PMSIHANDLE msi;
     if (file_or_product[0] == L'{') {
@@ -192,7 +180,7 @@ int wmain (int argc, wchar_t *argv[]) {
             EnumerateInstalledProducts();
         } else {
             // check if input is UpgradeCode
-            auto product_code = GetProductCode(argument);
+            auto product_code = GetFirstProductCode(argument);
             if (!product_code.empty()) {
                 std::wcout << L"UpgradeCode " << argument << L" is associated with ProductCode " << product_code << L"\n";
                 argument = product_code;

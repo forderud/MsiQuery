@@ -58,3 +58,14 @@ static std::wstring GetComponentPath (const std::wstring& product, const std::ws
     assert(ret == INSTALLSTATE_LOCAL);
     return buffer;
 }
+
+/** Returns the first ProductCode associated with a given UpgradeCode, or "" if unknown. */
+static std::wstring GetFirstProductCode (const std::wstring& upgrade_code) {
+    std::wstring buffer(38, L'\0'); // fixed length
+    DWORD idx = 0;
+    UINT ret = MsiEnumRelatedProducts(upgrade_code.c_str(), NULL, idx, const_cast<wchar_t*>(buffer.data()));
+    if (ret != ERROR_SUCCESS)
+        return L""; // none found
+
+    return buffer;
+}
