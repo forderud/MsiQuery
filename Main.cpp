@@ -160,7 +160,7 @@ void EnumerateInstalledProducts() {
             break;
         assert(ret == ERROR_SUCCESS);
 
-        std::wcout << idx << L": ";
+        std::wcout << idx << L": ProductCode: " << product_code << L'\n';
 #ifndef EXTENDED_INFO
         ParseInstalledApp(product_code, false); // faster, but less info
 #else
