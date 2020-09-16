@@ -5,7 +5,7 @@ Usage: `MsiQuery.exe [*|<filename.msi>|{ProductCode}|{UpgradeCode}]` where `*` w
 
 The tool will list the following:
 * [ProductCode](https://docs.microsoft.com/en-us/windows/win32/msi/productcode): Unique identifier for a particular product release. Must vary for different versions and languages.
-* [UpgradeCode](https://docs.microsoft.com/en-us/windows/win32/msi/upgradecode) (if present): Product identifier that remain unchanged across  version changes.
+* [UpgradeCode](https://docs.microsoft.com/en-us/windows/win32/msi/using-an-upgradecode) (if present): Product identifier that remain unchanged across  version changes.
 * [ProductName](https://docs.microsoft.com/en-us/windows/win32/msi/productname)
 * [ProductVersion](https://docs.microsoft.com/en-us/windows/win32/msi/productversion)
 * [Manufacturer](https://docs.microsoft.com/en-us/windows/win32/msi/manufacturer)
