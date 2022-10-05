@@ -108,7 +108,7 @@ std::wstring ParseMSIOrProductCode (std::wstring file_or_product) {
 }
 
 
-bool ParseInstalledApp (std::wstring product_code, bool verbose) {
+std::wstring ParseInstalledApp (std::wstring product_code) {
     std::wstring msi_cache_file;
     try {
         // installation details
@@ -117,7 +117,7 @@ bool ParseInstalledApp (std::wstring product_code, bool verbose) {
 
         msi_cache_file = GetProductInfo(product_code, INSTALLPROPERTY_LOCALPACKAGE); // Local cached package
     } catch (const std::exception &) {
-        return false; // doesn't appear to be installed
+        return L""; // doesn't appear to be installed
     }
 
     {
@@ -138,11 +138,7 @@ bool ParseInstalledApp (std::wstring product_code, bool verbose) {
         std::wcout << L"\n";
     }
 
-    if (!verbose)
-        return true;
-
-    AnalyzeMsiFile(msi_cache_file, &product_code);
-    return true;
+    return msi_cache_file;
 }
 
 
@@ -158,7 +154,7 @@ void EnumerateInstalledProducts() {
 
         std::wcout << idx << L": ProductCode: " << product_code << L'\n';
 #ifndef EXTENDED_INFO
-        ParseInstalledApp(product_code, false); // faster, but less info
+        std::wstring msi_cache_file = ParseInstalledApp(product_code);
 #else
         try {
             ParseMSIOrProductCode(product_code); // slower, but also gives UpgradeCode
@@ -195,7 +191,10 @@ int wmain (int argc, wchar_t *argv[]) {
             }
 
             product_code = ParseMSIOrProductCode(argument);
-            if (!ParseInstalledApp(product_code, true)) {
+            std::wstring msi_cache_file = ParseInstalledApp(product_code);
+            if (msi_cache_file.size() > 0) {
+                AnalyzeMsiFile(msi_cache_file, &product_code);
+            } else {
                 std::wcout << L"ProductCode is NOT installed.\n";
                 return 0;
             }
