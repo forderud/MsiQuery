@@ -37,6 +37,8 @@ static std::wstring GetProductInfo (const std::wstring& product_code, const wcha
     UINT ret = MsiGetProductInfo(product_code.c_str(), attribute, EMPTY_STRING, &buf_len);
     if (ret == ERROR_SUCCESS)
         return EMPTY_STRING;
+    else if (ret == ERROR_UNKNOWN_PRODUCT)
+        throw std::runtime_error("ERROR_UNKNOWN_PRODUCT");
     else if (ret != ERROR_MORE_DATA)
         throw std::runtime_error("MsiGetProductInfo failed");
 
