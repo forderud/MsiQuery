@@ -63,6 +63,9 @@ void AnalyzeMsiFile(std::wstring msi_file, std::wstring product_code) {
         for (const RegEntry& reg : reg_entries) {
             std::wcout << L"Registry: " << reg.RootStr() << L", " << reg.Key << L", " << reg.Name << L", " << reg.Value << L'\n';
         }
+        if (reg_entries.empty())
+            std::wcout << L"<none> (might still be created through custom actions)\n";
+
         std::wcout << L"\n";
     }
 }
