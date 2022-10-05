@@ -1,5 +1,4 @@
-# MsiQuery
-C++ tool for querying MSI files and installed Windows apps
+Command-line tool for querying MSI files and installed Windows apps
 
 Usage: `MsiQuery.exe [*|<filename.msi>|{ProductCode}|{UpgradeCode}]` where `*` will list all installed products.
 
