@@ -21,7 +21,7 @@ void AnalyzeMsiFile(std::wstring msi_file, std::wstring * product_code) {
             if (!ca.Type.NoImpersonate && !ca.Type.Deferred)
                 continue; // discard custom actions that neither run as admin nor are deferred
 
-            std::wcout << L"CustomAction: " << ca.Type.ToString() << L", " << ca.Target << L'\n';
+            std::wcout << L"  CustomAction: " << ca.Type.ToString() << L", " << ca.Target << L'\n';
         }
         std::wcout << L"\n";
     }
@@ -50,22 +50,22 @@ void AnalyzeMsiFile(std::wstring msi_file, std::wstring * product_code) {
             if (to_lowercase(path).find(L".exe") == path.npos)
                 continue; // filter out non-EXE files
 
-            std::wcout << L"EXE: " << path << L'\n';
+            std::wcout << L"  EXE: " << path << L'\n';
         }
-        std::wcout << L"\n";
     } else {
-        std::wcout << L"Not available since the app isn't installed.\n";
+        std::wcout << L"  Not available since the app isn't installed.\n";
     }
+    std::wcout << L"\n";
 
     {
         std::wcout << L"Registry entries:\n";
 
         auto reg_entries = query.QueryRegistry();
         for (const RegEntry& reg : reg_entries) {
-            std::wcout << L"Registry: " << reg.RootStr() << L", " << reg.Key << L", " << reg.Name << L", " << reg.Value << L'\n';
+            std::wcout << L"  Registry: " << reg.RootStr() << L", " << reg.Key << L", " << reg.Name << L", " << reg.Value << L'\n';
         }
         if (reg_entries.empty())
-            std::wcout << L"<none> (might still be created through custom actions)\n";
+            std::wcout << L"  <none> (might still be created through custom actions)\n";
 
         std::wcout << L"\n";
     }
@@ -105,10 +105,10 @@ std::wstring ParseMSIOrProductCode (std::wstring file_or_product) {
         std::wstring product_ver = GetProductProperty(msi, L"ProductVersion"); // REQUIRED
         std::wstring manufacturer = GetProductProperty(msi, L"Manufacturer"); // REQUIRED
         std::wcout << L"MSI properties:\n";
-        std::wcout << L"ProductCode: " << product_code << L"\n";
-        std::wcout << L"UpgradeCode: " << upgrade_code << L"\n";
-        std::wcout << L"ProductName: " << product_name << L" (" << product_ver << L")\n";
-        std::wcout << L"Manufacturer: " << manufacturer << L"\n";
+        std::wcout << L"  ProductCode: " << product_code << L"\n";
+        std::wcout << L"  UpgradeCode: " << upgrade_code << L"\n";
+        std::wcout << L"  ProductName: " << product_name << L" (" << product_ver << L")\n";
+        std::wcout << L"  Manufacturer: " << manufacturer << L"\n";
         std::wcout << L"\n";
     }
 
@@ -139,10 +139,10 @@ std::wstring ParseInstalledApp (std::wstring product_code) {
         std::wstring inst_date = GetProductInfo(product_code, INSTALLPROPERTY_INSTALLDATE); // "YYYYMMDD" format
 
         std::wcout << L"Installed properties:\n";
-        std::wcout << L"InstalledProductName: " << inst_name << L" (" << version << L")\n";
-        std::wcout << L"Publisher: " << publisher << L"\n";
-        std::wcout << L"InstallDate: " << inst_date << L"\n";
-        std::wcout << L"MSI cache: " << msi_cache_file << L"\n";
+        std::wcout << L"  InstalledProductName: " << inst_name << L" (" << version << L")\n";
+        std::wcout << L"  Publisher: " << publisher << L"\n";
+        std::wcout << L"  InstallDate: " << inst_date << L"\n";
+        std::wcout << L"  MSI cache: " << msi_cache_file << L"\n";
         std::wcout << L"\n";
     }
 
@@ -204,7 +204,7 @@ int wmain (int argc, wchar_t *argv[]) {
                 // parse installed MSI
                 AnalyzeMsiFile(msi_cache_file, &product_code);
             } else {
-                std::wcout << L"ProductCode is NOT installed.\n";
+                std::wcout << L"ProductCode is NOT installed.\n\n";
 
                 // parse non-installed MSI
                 AnalyzeMsiFile(argument, nullptr); // assume argument is MSI file
