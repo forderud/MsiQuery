@@ -201,9 +201,14 @@ int wmain (int argc, wchar_t *argv[]) {
             product_code = ParseMSIOrProductCode(argument);
             std::wstring msi_cache_file = ParseInstalledApp(product_code);
             if (msi_cache_file.size() > 0) {
+                // parse installed MSI
                 AnalyzeMsiFile(msi_cache_file, &product_code);
             } else {
                 std::wcout << L"ProductCode is NOT installed.\n";
+
+                // parse non-installed MSI
+                AnalyzeMsiFile(argument, nullptr); // assume argument is MSI file
+
                 return 0;
             }
         }
