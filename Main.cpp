@@ -26,7 +26,7 @@ void AnalyzeMsiFile(std::wstring msi_file, std::wstring * product_code) {
         std::wcout << L"\n";
     }
 
-    std::wcout << L"Installed EXE files:\n";
+    std::wcout << L"Installed binaries:\n";
     if (product_code) {
         // convert string to lowercase
         auto to_lowercase = [](std::wstring str) {
@@ -40,6 +40,7 @@ void AnalyzeMsiFile(std::wstring msi_file, std::wstring * product_code) {
         std::sort(components.begin(), components.end());
 
         auto files = query.QueryFile();
+        std::vector<std::wstring> exe_files, dll_files;
         for (const FileEntry& file : files) {
             // search for matching component
             auto component = std::lower_bound(components.begin(), components.end(), CreateComponentEntry(file.Component_));
@@ -47,11 +48,18 @@ void AnalyzeMsiFile(std::wstring msi_file, std::wstring * product_code) {
                 throw std::runtime_error("Unable to find ComponentEntry");
 
             auto path = GetComponentPath(*product_code, component->ComponentId);
-            if (to_lowercase(path).find(L".exe") == path.npos)
-                continue; // filter out non-EXE files
-
-            std::wcout << L"  EXE: " << path << L'\n';
+            if (to_lowercase(path).find(L".exe") != path.npos)
+                exe_files.push_back(path);
+            else if (to_lowercase(path).find(L".dll") != path.npos)
+                dll_files.push_back(path);
         }
+
+        // write EXEs first, then DLLs
+        for (auto file : exe_files)
+            std::wcout << L"  " << file << L'\n';
+        for (auto file : dll_files)
+            std::wcout << L"  " << file << L'\n';
+
     } else {
         std::wcout << L"  Not available since the app isn't installed.\n";
     }
