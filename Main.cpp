@@ -9,6 +9,65 @@
 #pragma comment(lib, "Msi.lib")
 
 
+void AnalyzeMsiFile(std::wstring msi_file, std::wstring product_code) {
+    MsiQuery query(msi_file);
+
+    {
+        std::wcout << L"Custom actions that might affect system state:\n";
+        //REF: https://docs.microsoft.com/en-us/windows/win32/msi/changing-the-system-state-using-a-custom-action
+
+        auto custom_actions = query.QueryCustomAction();
+        for (const CustomActionEntry& ca : custom_actions) {
+            if (!ca.Type.NoImpersonate && !ca.Type.Deferred)
+                continue; // discard custom actions that neither run as admin nor are deferred
+
+            std::wcout << L"CustomAction: " << ca.Type.ToString() << L", " << ca.Target << L'\n';
+        }
+        std::wcout << L"\n";
+    }
+
+    {
+        std::wcout << L"Installed EXE files:\n";
+
+        // convert string to lowercase
+        auto to_lowercase = [](std::wstring str) {
+            std::transform(str.begin(), str.end(), str.begin(),
+                [](wchar_t c) { return std::tolower(c); });
+            return str;
+        };
+
+        // component listing (sorted by "Component" field for faster lookup)
+        std::vector<ComponentEntry> components = query.QueryComponent();
+        std::sort(components.begin(), components.end());
+
+        auto files = query.QueryFile();
+        for (const FileEntry& file : files) {
+            // search for matching component
+            auto component = std::lower_bound(components.begin(), components.end(), CreateComponentEntry(file.Component_));
+            if (component == components.end())
+                throw std::runtime_error("Unable to find ComponentEntry");
+
+            auto path = GetComponentPath(product_code, component->ComponentId);
+            if (to_lowercase(path).find(L".exe") == path.npos)
+                continue; // filter out non-EXE files
+
+            std::wcout << L"EXE: " << path << L'\n';
+        }
+        std::wcout << L"\n";
+    }
+
+    {
+        std::wcout << L"Registry entries:\n";
+
+        auto reg_entries = query.QueryRegistry();
+        for (const RegEntry& reg : reg_entries) {
+            std::wcout << L"Registry: " << reg.RootStr() << L", " << reg.Key << L", " << reg.Name << L", " << reg.Value << L'\n';
+        }
+        std::wcout << L"\n";
+    }
+}
+
+
 std::wstring ParseMSIOrProductCode (std::wstring file_or_product) {
     PMSIHANDLE msi;
     if (file_or_product[0] == L'{') {
@@ -78,62 +137,7 @@ bool ParseInstalledApp (std::wstring product_code, bool verbose) {
     if (!verbose)
         return true;
 
-    MsiQuery query(msi_cache_file);
-
-    {
-        std::wcout << L"Custom actions that might affect system state:\n";
-        //REF: https://docs.microsoft.com/en-us/windows/win32/msi/changing-the-system-state-using-a-custom-action
-
-        auto custom_actions = query.QueryCustomAction();
-        for (const CustomActionEntry& ca : custom_actions) {
-            if (!ca.Type.NoImpersonate && !ca.Type.Deferred)
-                continue; // discard custom actions that neither run as admin nor are deferred
-
-            std::wcout << L"CustomAction: " << ca.Type.ToString() << L", " << ca.Target << L'\n';
-        }
-        std::wcout << L"\n";
-    }
-
-    {
-        std::wcout << L"Installed EXE files:\n";
-
-        // convert string to lowercase
-        auto to_lowercase = [](std::wstring str) {
-            std::transform(str.begin(), str.end(), str.begin(),
-                [](wchar_t c){ return std::tolower(c); });
-            return str;
-        };
-
-        // component listing (sorted by "Component" field for faster lookup)
-        std::vector<ComponentEntry> components = query.QueryComponent();
-        std::sort(components.begin(), components.end());
-
-        auto files = query.QueryFile();
-        for (const FileEntry& file : files) {
-            // search for matching component
-            auto component = std::lower_bound(components.begin(), components.end(), CreateComponentEntry(file.Component_));
-            if (component == components.end())
-                throw std::runtime_error("Unable to find ComponentEntry");
-
-            auto path = GetComponentPath(product_code, component->ComponentId);
-            if (to_lowercase(path).find(L".exe") == path.npos)
-                continue; // filter out non-EXE files
-
-            std::wcout << L"EXE: " << path << L'\n';
-        }
-        std::wcout << L"\n";
-    }
-
-    {
-        std::wcout << L"Registry entries:\n";
-
-        auto reg_entries = query.QueryRegistry();
-        for (const RegEntry& reg : reg_entries) {
-            std::wcout << L"Registry: " << reg.RootStr() << L", " << reg.Key << L", " << reg.Name << L", " << reg.Value << L'\n';
-        }
-        std::wcout << L"\n";
-    }
-
+    AnalyzeMsiFile(msi_cache_file, product_code);
     return true;
 }
 
