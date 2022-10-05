@@ -71,10 +71,18 @@ void AnalyzeMsiFile(std::wstring msi_file, std::wstring * product_code) {
     }
 }
 
+bool IsGUID (const std::wstring & str) {
+    if (str.length() == 38) {
+        if ((str[0] == L'{') && (str.back() == L'}'))
+            return true;
+    }
+    return false;
+}
+
 
 std::wstring ParseMSIOrProductCode (std::wstring file_or_product) {
     PMSIHANDLE msi;
-    if (file_or_product[0] == L'{') {
+    if (IsGUID(file_or_product)) {
         // input is a ProductCode
         std::wcout << L"Attempting to open ProductCode " << file_or_product << L"...\n";
         UINT ret = MsiOpenProduct(file_or_product.c_str(), &msi);
