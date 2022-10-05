@@ -9,7 +9,7 @@
 #pragma comment(lib, "Msi.lib")
 
 
-void AnalyzeMsiFile(std::wstring msi_file, std::wstring product_code) {
+void AnalyzeMsiFile(std::wstring msi_file, std::wstring * product_code) {
     MsiQuery query(msi_file);
 
     {
@@ -26,9 +26,8 @@ void AnalyzeMsiFile(std::wstring msi_file, std::wstring product_code) {
         std::wcout << L"\n";
     }
 
-    {
-        std::wcout << L"Installed EXE files:\n";
-
+    std::wcout << L"Installed EXE files:\n";
+    if (product_code) {
         // convert string to lowercase
         auto to_lowercase = [](std::wstring str) {
             std::transform(str.begin(), str.end(), str.begin(),
@@ -47,13 +46,15 @@ void AnalyzeMsiFile(std::wstring msi_file, std::wstring product_code) {
             if (component == components.end())
                 throw std::runtime_error("Unable to find ComponentEntry");
 
-            auto path = GetComponentPath(product_code, component->ComponentId);
+            auto path = GetComponentPath(*product_code, component->ComponentId);
             if (to_lowercase(path).find(L".exe") == path.npos)
                 continue; // filter out non-EXE files
 
             std::wcout << L"EXE: " << path << L'\n';
         }
         std::wcout << L"\n";
+    } else {
+        std::wcout << L"Not available since the app isn't installed.\n";
     }
 
     {
@@ -140,7 +141,7 @@ bool ParseInstalledApp (std::wstring product_code, bool verbose) {
     if (!verbose)
         return true;
 
-    AnalyzeMsiFile(msi_cache_file, product_code);
+    AnalyzeMsiFile(msi_cache_file, &product_code);
     return true;
 }
 
