@@ -16,7 +16,7 @@ In addition, the following is listed:
 * Added [registry entries](https://docs.microsoft.com/en-us/windows/win32/msi/registry-table) (can also be created through custom actions)
 
 
-## Suggested SW
+## Related tools
 * **[Orca](https://docs.microsoft.com/en-us/windows/win32/msi/orca-exe)** MSI viewer: Included with Windows 10 SDK. By default installed to `%ProgramFiles(x86)%\Windows Kits\10\bin\<version>\x86\Orca-x86_en-us.msi`
 
 ## References
