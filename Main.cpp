@@ -52,6 +52,8 @@ void AnalyzeMsiFile(std::wstring msi_file, std::wstring * product_code) {
                 exe_files.push_back(path);
             else if (to_lowercase(path).find(L".dll") != path.npos)
                 dll_files.push_back(path);
+            else if (to_lowercase(path).find(L".pyd") != path.npos)
+                dll_files.push_back(path); // python extension (renamed DLL)
         }
 
         // write EXEs first, then DLLs
