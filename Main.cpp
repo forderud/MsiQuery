@@ -25,8 +25,9 @@ void AnalyzeMsiFile(std::wstring msi_file, std::wstring * product_code) {
         std::wcout << L"\n";
     }
 
-    std::wcout << L"Installed binaries:\n";
-    if (product_code) {
+    {
+        std::wcout << L"Installed binaries:\n";
+
         // convert string to lowercase
         auto to_lowercase = [](std::wstring str) {
             std::transform(str.begin(), str.end(), str.begin(),
@@ -36,6 +37,7 @@ void AnalyzeMsiFile(std::wstring msi_file, std::wstring * product_code) {
 
         // component listing (sorted by "Component" field for faster lookup)
         ComponentTable components = query.QueryComponent();
+        DirectoryTable directories = query.QueryDirectory();
 
         auto files = query.QueryFile();
         std::vector<std::wstring> exe_files, dll_files;
@@ -43,7 +45,12 @@ void AnalyzeMsiFile(std::wstring msi_file, std::wstring * product_code) {
             // Component table lookup
             ComponentEntry component = components.Lookup(file.Component_);
 
-            auto path = GetComponentPath(*product_code, component.ComponentId);
+            std::wstring path;
+            if (product_code)
+                path = GetComponentPath(*product_code, component.ComponentId); // get actually installed paths
+            else
+                path = directories.Lookup(component.Directory_) + L'\\' + file.LongFileName();
+
             if (to_lowercase(path).find(L".exe") != path.npos)
                 exe_files.push_back(path);
             else if (to_lowercase(path).find(L".dll") != path.npos)
@@ -58,10 +65,8 @@ void AnalyzeMsiFile(std::wstring msi_file, std::wstring * product_code) {
         for (auto file : dll_files)
             std::wcout << L"  " << file << L'\n';
 
-    } else {
-        std::wcout << L"  Not available since the app isn't installed.\n";
+        std::wcout << L"\n";
     }
-    std::wcout << L"\n";
 
     {
         std::wcout << L"Registry entries:\n";
