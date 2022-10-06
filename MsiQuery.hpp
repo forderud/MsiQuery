@@ -181,7 +181,7 @@ struct ComponentEntry {
 
 class ComponentTable {
 public:
-    ComponentTable(const std::vector<ComponentEntry>& components) : m_components(components) {
+    ComponentTable(std::vector<ComponentEntry> components) : m_components(components) {
         // sort by "Component" field
         std::sort(m_components.begin(), m_components.end());
     }
@@ -222,7 +222,7 @@ public:
     }
 
     /** Query Component table. */
-    std::vector<ComponentEntry> QueryComponent () {
+    ComponentTable QueryComponent () {
         PMSIHANDLE msi_view;
         Execute(L"SELECT `Component`,`ComponentId`,`Directory_`,`Attributes` FROM `Component`", &msi_view);
 
@@ -242,7 +242,7 @@ public:
             result.push_back({val1, val2, val3, val4});
         }
 
-        return result;
+        return ComponentTable(result);
     }
 
     /** Query File table. */
