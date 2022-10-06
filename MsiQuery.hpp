@@ -178,11 +178,32 @@ struct ComponentEntry {
     }
 };
 
-static ComponentEntry CreateComponentEntry(std::wstring Component) {
-    ComponentEntry entry;
-    entry.Component = Component;
-    return entry;
-}
+
+class ComponentTable {
+public:
+    ComponentTable(const std::vector<ComponentEntry>& components) : m_components(components) {
+        // sort by "Component" field
+        std::sort(m_components.begin(), m_components.end());
+    }
+
+    ComponentEntry Lookup(std::wstring Component) {
+        // search for matching component
+        auto component = std::lower_bound(m_components.begin(), m_components.end(), CreateComponentEntry(Component));
+        if (component == m_components.end())
+            throw std::runtime_error("Unable to find ComponentEntry");
+
+        return *component;
+    }
+
+private:
+    static ComponentEntry CreateComponentEntry(std::wstring Component) {
+        ComponentEntry entry;
+        entry.Component = Component;
+        return entry;
+    }
+
+    std::vector<ComponentEntry> m_components;
+};
 
 
 /** Query an installed MSI file. 
@@ -221,19 +242,7 @@ public:
             result.push_back({val1, val2, val3, val4});
         }
 
-        // sort by "Component" field
-        std::sort(result.begin(), result.end());
-
         return result;
-    }
-
-    static ComponentEntry ComponentLookup (std::wstring Component, std::vector<ComponentEntry> components) {
-        // search for matching component
-        auto component = std::lower_bound(components.begin(), components.end(), CreateComponentEntry(Component));
-        if (component == components.end())
-            throw std::runtime_error("Unable to find ComponentEntry");
-
-        return *component;
     }
 
     /** Query File table. */
