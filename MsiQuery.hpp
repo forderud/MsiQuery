@@ -162,6 +162,39 @@ struct DirectoryEntry {
 
         return DefaultDir.substr(idx + 1); // remove short-name prefix
     }
+
+    bool operator < (const DirectoryEntry& other) const {
+        return Directory < other.Directory;
+    }
+};
+
+class DirectoryTable {
+public:
+    DirectoryTable(std::vector<DirectoryEntry> directories) : m_directories(directories) {
+        // sort by "Directory" field
+        std::sort(m_directories.begin(), m_directories.end());
+    }
+
+    std::wstring Lookup(std::wstring Directory) const {
+        if (Directory.empty())
+            return L"";
+
+        auto dir = std::lower_bound(m_directories.begin(), m_directories.end(), CreateDirectoryEntry(Directory));
+        if (dir == m_directories.end())
+            throw std::runtime_error("Unable to find DirectoryEntry");
+
+        // recursive lookup
+        return Lookup(dir->Directory_Parent) + L'\\' + dir->LongDefaultDir();
+    }
+
+private:
+    static DirectoryEntry CreateDirectoryEntry(std::wstring Directory) {
+        DirectoryEntry entry;
+        entry.Directory = Directory;
+        return entry;
+    }
+
+    std::vector<DirectoryEntry> m_directories;
 };
 
 /** https://docs.microsoft.com/en-us/windows/win32/msi/component-table */
@@ -186,7 +219,7 @@ public:
         std::sort(m_components.begin(), m_components.end());
     }
 
-    ComponentEntry Lookup(std::wstring Component) {
+    ComponentEntry Lookup(std::wstring Component) const {
         // search for matching component
         auto component = std::lower_bound(m_components.begin(), m_components.end(), CreateComponentEntry(Component));
         if (component == m_components.end())
