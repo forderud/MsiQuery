@@ -40,12 +40,10 @@ void AnalyzeMsiFile(std::wstring msi_file, std::wstring * product_code) {
         auto files = query.QueryFile();
         std::vector<std::wstring> exe_files, dll_files;
         for (const FileEntry& file : files) {
-            // search for matching component
-            auto component = std::lower_bound(components.begin(), components.end(), CreateComponentEntry(file.Component_));
-            if (component == components.end())
-                throw std::runtime_error("Unable to find ComponentEntry");
+            // Component table lookup
+            ComponentEntry component = MsiQuery::ComponentLookup(file.Component_, components);
 
-            auto path = GetComponentPath(*product_code, component->ComponentId);
+            auto path = GetComponentPath(*product_code, component.ComponentId);
             if (to_lowercase(path).find(L".exe") != path.npos)
                 exe_files.push_back(path);
             else if (to_lowercase(path).find(L".dll") != path.npos)

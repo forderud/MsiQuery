@@ -227,6 +227,15 @@ public:
         return result;
     }
 
+    static ComponentEntry ComponentLookup (std::wstring Component, std::vector<ComponentEntry> components) {
+        // search for matching component
+        auto component = std::lower_bound(components.begin(), components.end(), CreateComponentEntry(Component));
+        if (component == components.end())
+            throw std::runtime_error("Unable to find ComponentEntry");
+
+        return *component;
+    }
+
     /** Query File table. */
     std::vector<FileEntry> QueryFile () {
         PMSIHANDLE msi_view;
