@@ -149,6 +149,20 @@ struct FileEntry {
     }
 };
 
+struct DirectoryEntry {
+    std::wstring Directory;
+    std::wstring Directory_Parent;
+    std::wstring DefaultDir; ///< stored in "short-name|long-name" format if long
+
+    std::wstring LongDefaultDir() const {
+        size_t idx = DefaultDir.find(L'|');
+        if (idx == std::wstring::npos)
+            return DefaultDir; // only short name
+
+        return DefaultDir.substr(idx + 1); // remove short-name prefix
+    }
+};
+
 /** https://docs.microsoft.com/en-us/windows/win32/msi/component-table */
 struct ComponentEntry {
     std::wstring Component;
@@ -227,6 +241,29 @@ public:
             auto val2 = GetRecordString(msi_record, 2);
             auto val3 = GetRecordString(msi_record, 3);
             result.push_back({val1, val2, val3});
+        }
+
+        return result;
+    }
+
+    /** Query Directory table. */
+    std::vector<DirectoryEntry> QueryDirectory() {
+        PMSIHANDLE msi_view;
+        Execute(L"SELECT `Directory`,`Directory_Parent`,`DefaultDir` FROM `Directory`", &msi_view);
+
+        std::vector<DirectoryEntry> result;
+        while (true) {
+            PMSIHANDLE msi_record;
+            UINT ret = MsiViewFetch(msi_view, &msi_record);
+            if (ret == ERROR_NO_MORE_ITEMS)
+                break;
+            if (ret != ERROR_SUCCESS)
+                abort();
+
+            auto val1 = GetRecordString(msi_record, 1);
+            auto val2 = GetRecordString(msi_record, 2);
+            auto val3 = GetRecordString(msi_record, 3);
+            result.push_back({ val1, val2, val3 });
         }
 
         return result;
