@@ -135,9 +135,18 @@ struct RegEntry {
 struct FileEntry {
     std::wstring File;
     std::wstring Component_;
-    std::wstring FileName;
+    std::wstring FileName; ///< stored in "short-name|long-name" format if longer than 8+3
     //std::wstring Filesize;
     //...
+
+    std::wstring LongFileName() const {
+        // Doc: https://learn.microsoft.com/en-us/windows/win32/msi/filename
+        size_t idx = FileName.find(L'|');
+        if (idx == std::wstring::npos)
+            return FileName; // filename 8+3 or shorter
+
+        return FileName.substr(idx+1); // remove short-name prefix
+    }
 };
 
 /** https://docs.microsoft.com/en-us/windows/win32/msi/component-table */
