@@ -1,6 +1,5 @@
 #include "MsiQuery.hpp"
 #include "MsiUtil.hpp"
-#include <algorithm>
 #include <fcntl.h>
 #include <io.h>
 #include <cctype>
@@ -37,7 +36,6 @@ void AnalyzeMsiFile(std::wstring msi_file, std::wstring * product_code) {
 
         // component listing (sorted by "Component" field for faster lookup)
         std::vector<ComponentEntry> components = query.QueryComponent();
-        std::sort(components.begin(), components.end());
 
         auto files = query.QueryFile();
         std::vector<std::wstring> exe_files, dll_files;

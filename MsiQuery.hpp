@@ -1,4 +1,5 @@
 #pragma once
+#include <algorithm>
 #include <stdexcept>
 #include <string>
 #include <tuple>
@@ -219,6 +220,9 @@ public:
             auto val4 = GetRecordInt(msi_record, 4);
             result.push_back({val1, val2, val3, val4});
         }
+
+        // sort by "Component" field
+        std::sort(result.begin(), result.end());
 
         return result;
     }
