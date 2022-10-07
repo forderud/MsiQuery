@@ -16,12 +16,17 @@ void AnalyzeMsiFile(std::wstring msi_file, std::wstring * product_code) {
         //REF: https://docs.microsoft.com/en-us/windows/win32/msi/changing-the-system-state-using-a-custom-action
 
         auto custom_actions = query.QueryCustomAction();
+        bool has_custom_action = false;
         for (const CustomActionEntry& ca : custom_actions) {
             if (!ca.Type.NoImpersonate && !ca.Type.Deferred)
                 continue; // discard custom actions that neither run as admin nor are deferred
 
+            has_custom_action = true;
             std::wcout << L"  CustomAction: " << ca.Type.ToString() << L", " << ca.Target << L'\n';
         }
+        if (!has_custom_action)
+            std::wcout << L"  <none>\n";
+
         std::wcout << L"\n";
     }
 
