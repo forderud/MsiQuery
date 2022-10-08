@@ -150,27 +150,28 @@ struct FileEntry {
     }
 };
 
-struct DirectoryEntry {
-    std::wstring Directory;
-    std::wstring Directory_Parent;
-    std::wstring DefaultDir; ///< stored in "short-name|long-name" format if long
-
-    std::wstring LongDefaultDir() const {
-        size_t idx = DefaultDir.find(L'|');
-        if (idx == std::wstring::npos)
-            return DefaultDir; // only short name
-
-        return DefaultDir.substr(idx + 1); // remove short-name prefix
-    }
-
-    bool operator < (const DirectoryEntry& other) const {
-        return Directory < other.Directory;
-    }
-};
 
 class DirectoryTable {
 public:
-    DirectoryTable(std::vector<DirectoryEntry> directories) : m_directories(directories) {
+    struct Entry {
+        std::wstring Directory;
+        std::wstring Directory_Parent;
+        std::wstring DefaultDir; ///< stored in "short-name|long-name" format if long
+
+        std::wstring LongDefaultDir() const {
+            size_t idx = DefaultDir.find(L'|');
+            if (idx == std::wstring::npos)
+                return DefaultDir; // only short name
+
+            return DefaultDir.substr(idx + 1); // remove short-name prefix
+        }
+
+        bool operator < (const Entry& other) const {
+            return Directory < other.Directory;
+        }
+    };
+
+    DirectoryTable(std::vector<Entry> directories) : m_directories(directories) {
         // sort by "Directory" field
         std::sort(m_directories.begin(), m_directories.end());
     }
@@ -188,13 +189,13 @@ public:
     }
 
 private:
-    static DirectoryEntry CreateDirectoryEntry(std::wstring Directory) {
-        DirectoryEntry entry;
+    static Entry CreateDirectoryEntry(std::wstring Directory) {
+        Entry entry;
         entry.Directory = Directory;
         return entry;
     }
 
-    std::vector<DirectoryEntry> m_directories;
+    std::vector<Entry> m_directories;
 };
 
 
@@ -303,11 +304,11 @@ public:
     }
 
     /** Query Directory table. */
-    std::vector<DirectoryEntry> QueryDirectory() {
+    DirectoryTable QueryDirectory() {
         PMSIHANDLE msi_view;
         Execute(L"SELECT `Directory`,`Directory_Parent`,`DefaultDir` FROM `Directory`", &msi_view);
 
-        std::vector<DirectoryEntry> result;
+        std::vector<DirectoryTable::Entry> result;
         while (true) {
             PMSIHANDLE msi_record;
             UINT ret = MsiViewFetch(msi_view, &msi_record);
@@ -322,7 +323,7 @@ public:
             result.push_back({ val1, val2, val3 });
         }
 
-        return result;
+        return DirectoryTable(result);
     }
 
     /** Query Registry table. */
