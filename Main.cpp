@@ -133,16 +133,10 @@ std::wstring ParseMSIOrProductCode (std::wstring file_or_product) {
 
 
 std::wstring ParseInstalledApp (std::wstring product_code) {
-    std::wstring msi_cache_file;
-    try {
-        // installation details
-        //std::wstring inst_prod_code = GetProductInfo(product_code, L"ProductCode");
-        //assert(inst_prod_code == product_code);
-
-        msi_cache_file = GetProductInfo(product_code, INSTALLPROPERTY_LOCALPACKAGE); // Local cached package
-    } catch (const std::exception &) {
-        return L""; // doesn't appear to be installed
-    }
+    // check if app is installed
+    std::wstring msi_cache_file = GetProductInfo(product_code, INSTALLPROPERTY_LOCALPACKAGE); // Local cached package
+    if (msi_cache_file.empty())
+        return L""; // early return if not installed
 
     {
         std::wstring inst_loc = GetProductInfo(product_code, INSTALLPROPERTY_INSTALLLOCATION); // seem to be empty
