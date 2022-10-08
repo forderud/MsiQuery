@@ -48,7 +48,7 @@ void AnalyzeMsiFile(std::wstring msi_file, std::wstring * product_code) {
         std::vector<std::wstring> exe_files, dll_files;
         for (const FileEntry& file : files) {
             // Component table lookup
-            ComponentEntry component = components.Lookup(file.Component_);
+            ComponentTable::Entry component = components.Lookup(file.Component_);
 
             std::wstring path;
             if (product_code)

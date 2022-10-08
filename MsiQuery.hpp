@@ -197,29 +197,30 @@ private:
     std::vector<DirectoryEntry> m_directories;
 };
 
-/** https://docs.microsoft.com/en-us/windows/win32/msi/component-table */
-struct ComponentEntry {
-    std::wstring Component;
-    std::wstring ComponentId;
-    std::wstring Directory_;
-    int          Attributes; ///< 0x100=64bit, 0x004=RegistryKeyPath
-    //std::wstring Condition;
-    //std::wstring KeyPath;
-
-    bool operator < (const ComponentEntry& other) const {
-        return Component < other.Component;
-    }
-};
 
 
 class ComponentTable {
 public:
-    ComponentTable(std::vector<ComponentEntry> components) : m_components(components) {
+    /** https://docs.microsoft.com/en-us/windows/win32/msi/component-table */
+    struct Entry {
+        std::wstring Component;
+        std::wstring ComponentId;
+        std::wstring Directory_;
+        int          Attributes; ///< 0x100=64bit, 0x004=RegistryKeyPath
+        //std::wstring Condition;
+        //std::wstring KeyPath;
+
+        bool operator < (const Entry& other) const {
+            return Component < other.Component;
+        }
+    };
+
+    ComponentTable(std::vector<Entry> components) : m_components(components) {
         // sort by "Component" field
         std::sort(m_components.begin(), m_components.end());
     }
 
-    ComponentEntry Lookup(std::wstring Component) const {
+    Entry Lookup(std::wstring Component) const {
         // search for matching component
         auto component = std::lower_bound(m_components.begin(), m_components.end(), CreateComponentEntry(Component));
         if (component == m_components.end())
@@ -229,13 +230,13 @@ public:
     }
 
 private:
-    static ComponentEntry CreateComponentEntry(std::wstring Component) {
-        ComponentEntry entry;
+    static Entry CreateComponentEntry(std::wstring Component) {
+        Entry entry;
         entry.Component = Component;
         return entry;
     }
 
-    std::vector<ComponentEntry> m_components;
+    std::vector<Entry> m_components;
 };
 
 
@@ -259,7 +260,7 @@ public:
         PMSIHANDLE msi_view;
         Execute(L"SELECT `Component`,`ComponentId`,`Directory_`,`Attributes` FROM `Component`", &msi_view);
 
-        std::vector<ComponentEntry> result;
+        std::vector<ComponentTable::Entry> result;
         while (true) {
             PMSIHANDLE msi_record;
             UINT ret = MsiViewFetch(msi_view, &msi_record);
