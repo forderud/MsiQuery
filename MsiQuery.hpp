@@ -239,7 +239,7 @@ private:
 };
 
 
-/** Query an installed MSI file. 
+/** Query an MSI file. It doesn't need to be installed first.
     Based on WiCompon.vbs sample (installed under C:\Program Files (x86)\Windows Kits\10\bin\<version>\x64) */
 class MsiQuery {
 public:
