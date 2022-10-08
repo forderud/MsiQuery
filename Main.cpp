@@ -12,7 +12,7 @@ void AnalyzeMsiFile(std::wstring msi_file, std::wstring * product_code) {
     MsiQuery query(msi_file);
 
     {
-        std::wcout << L"Custom actions that might affect system state:\n";
+        std::wcout << L"Custom actions: (might affect system state)\n";
         //REF: https://docs.microsoft.com/en-us/windows/win32/msi/changing-the-system-state-using-a-custom-action
 
         auto custom_actions = query.QueryCustomAction();
@@ -31,7 +31,7 @@ void AnalyzeMsiFile(std::wstring msi_file, std::wstring * product_code) {
     }
 
     {
-        std::wcout << L"Installed binaries:\n";
+        std::wcout << L"Installed binaries: (skipping other file types)\n";
 
         // convert string to lowercase
         auto to_lowercase = [](std::wstring str) {
@@ -217,15 +217,15 @@ int wmain (int argc, wchar_t *argv[]) {
             product_code = ParseMSIOrProductCode(argument);
             std::wstring msi_cache_file = ParseInstalledApp(product_code);
             if (msi_cache_file.size() > 0) {
+                std::wcout << L"Application is already installed. Will also analyze installed files.\n\n";
+
                 // parse installed MSI
                 AnalyzeMsiFile(msi_cache_file, &product_code);
             } else {
-                std::wcout << L"ProductCode is NOT installed.\n\n";
+                std::wcout << L"Application is NOT installed. Will perform offline analysis.\n\n";
 
                 // parse non-installed MSI
                 AnalyzeMsiFile(argument, nullptr); // assume argument is MSI file
-
-                return 0;
             }
         }
     } catch (std::exception & e) {
