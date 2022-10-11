@@ -17,6 +17,7 @@ static std::wstring ToAbsolutePath(std::wstring path) {
 
 void AnalyzeMsiFile(std::wstring msi_file, std::wstring * product_code) {
     MsiQuery query(msi_file);
+    FileTable files = query.QueryFile();
 
     {
         std::wcout << L"Custom actions: (might affect system state)\n";
@@ -29,7 +30,8 @@ void AnalyzeMsiFile(std::wstring msi_file, std::wstring * product_code) {
                 continue; // discard custom actions that neither run as admin nor are deferred
 
             has_custom_action = true;
-            std::wcout << L"  " << ca.Action << L": "  << ca.Type.ToString() << L" " << ca.Target << L'\n';
+            FileTable::Entry file = files.Lookup(ca.Source, false); // might fail
+            std::wcout << L"  " << ca.Action << L": "  << ca.Type.ToString() << L' ' << file.LongFileName() << L' ' << ca.Target << L'\n';
         }
         if (!has_custom_action)
             std::wcout << L"  <none>\n";
@@ -51,7 +53,6 @@ void AnalyzeMsiFile(std::wstring msi_file, std::wstring * product_code) {
 
         DirectoryTable directories = query.QueryDirectory();
 
-        FileTable files = query.QueryFile();
         std::vector<std::wstring> exe_files, dll_files;
         for (const FileTable::Entry& file : files.Entries()) {
             ComponentTable::Entry component = components.Lookup(file.Component_);

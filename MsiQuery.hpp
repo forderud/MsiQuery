@@ -161,14 +161,16 @@ public:
         std::sort(m_files.begin(), m_files.end());
     }
 
-    Entry Lookup(std::wstring File) {
+    Entry Lookup(std::wstring File, bool throw_on_failure) {
         // search for matching component
         const Entry val = CreateFileEntry(File);
         auto res = std::lower_bound(m_files.begin(), m_files.end(), val);
-        if (res == m_files.end())
-            throw std::runtime_error("Unable to find FileTable entry");
-        if (val < *res)
-            throw std::runtime_error("Unable to find FileTable entry");
+        if ((res == m_files.end()) || (val < *res)) {
+            if (throw_on_failure)
+                throw std::runtime_error("Unable to find FileTable entry");
+            else
+                return {};
+        }
 
         return *res;
     }
