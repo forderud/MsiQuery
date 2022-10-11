@@ -2,7 +2,6 @@
 #include <algorithm>
 #include <stdexcept>
 #include <string>
-#include <tuple>
 #include <vector>
 
 #include <Windows.h>
