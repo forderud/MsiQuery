@@ -30,6 +30,8 @@ void AnalyzeMsiFile(std::wstring msi_file, std::wstring * product_code) {
         std::wcout << L"\n";
     }
 
+    ComponentTable components = query.QueryComponent();
+
     {
         std::wcout << L"Installed binaries: (skipping other file types)\n";
 
@@ -40,14 +42,11 @@ void AnalyzeMsiFile(std::wstring msi_file, std::wstring * product_code) {
             return str;
         };
 
-        // component listing (sorted by "Component" field for faster lookup)
-        ComponentTable components = query.QueryComponent();
         DirectoryTable directories = query.QueryDirectory();
 
         auto files = query.QueryFile();
         std::vector<std::wstring> exe_files, dll_files;
         for (const FileEntry& file : files) {
-            // Component table lookup
             ComponentTable::Entry component = components.Lookup(file.Component_);
 
             std::wstring path;
@@ -78,7 +77,13 @@ void AnalyzeMsiFile(std::wstring msi_file, std::wstring * product_code) {
 
         auto reg_entries = query.QueryRegistry();
         for (const RegEntry& reg : reg_entries) {
-            std::wcout << L"  " << reg.RootStr() << L'\\' << reg.Key << L'\\' << reg.Name << L'=' << reg.Value << L'\n';
+            std::wstring path;
+            if (product_code && false) // disabled for now since it always return "E:\"
+                path = GetComponentPath(*product_code, components.Lookup(reg.Component_).ComponentId);
+            else
+                path = reg.RootStr() + L'\\' + reg.Key +  L'\\' + reg.Name + L'=' + reg.Value;
+
+            std::wcout << L"  " << path << L'\n';
         }
         if (reg_entries.empty())
             std::wcout << L"  <none> (might still be created through custom actions)\n";
