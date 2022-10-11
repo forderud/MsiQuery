@@ -52,7 +52,7 @@ static std::wstring GetProductInfo (const std::wstring& product_code, const wcha
 
 static std::wstring GetComponentPath (const std::wstring& product, const std::wstring& component) {
     DWORD buf_len = 0;
-    UINT ret = MsiGetComponentPath(product.c_str(), component.c_str(), nullptr, &buf_len);
+    INSTALLSTATE ret = MsiGetComponentPath(product.c_str(), component.c_str(), nullptr, &buf_len);
     if (ret == INSTALLSTATE_ABSENT)
         throw std::runtime_error("MsiGetComponentPath returned INSTALLSTATE_ABSENT");
     assert(ret == INSTALLSTATE_LOCAL);
