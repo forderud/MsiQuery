@@ -8,6 +8,13 @@
 #pragma comment(lib, "Msi.lib")
 
 
+static std::wstring ToAbsolutePath(std::wstring path) {
+    DWORD len = GetFullPathNameW(path.c_str(), 0, nullptr, nullptr);
+    std::wstring buffer(len-1, L'\0'); // subtract null-termination
+    len = GetFullPathNameW(path.c_str(), len, const_cast<wchar_t*>(buffer.data()), nullptr);
+    return buffer;
+}
+
 void AnalyzeMsiFile(std::wstring msi_file, std::wstring * product_code) {
     MsiQuery query(msi_file);
 
@@ -111,6 +118,8 @@ std::wstring ParseMSIOrProductCode (std::wstring file_or_product) {
             throw std::runtime_error("MsiOpenPackage failed");
     } else {
         // input is a MSI filename
+        file_or_product = ToAbsolutePath(file_or_product);
+
         std::wcout << L"Attempting to open file " << file_or_product << L"...\n";
         UINT ret = MsiOpenPackageW(file_or_product.c_str(), &msi);
         if (ret == ERROR_FILE_NOT_FOUND)
