@@ -29,7 +29,7 @@ void AnalyzeMsiFile(std::wstring msi_file, std::wstring * product_code) {
                 continue; // discard custom actions that neither run as admin nor are deferred
 
             has_custom_action = true;
-            std::wcout << L"  " << ca.Type.ToString() << L" " << ca.Target << L'\n';
+            std::wcout << L"  " << ca.Action << L": "  << ca.Type.ToString() << L" " << ca.Target << L'\n';
         }
         if (!has_custom_action)
             std::wcout << L"  <none>\n";
