@@ -150,9 +150,15 @@ public:
 
             return FileName.substr(idx + 1); // remove short-name prefix
         }
+
+        bool operator < (const Entry& other) const {
+            return File < other.File;
+        }
     };
 
     FileTable(std::vector<Entry> files) : m_files(files) {
+        // sort by "File" field
+        std::sort(m_files.begin(), m_files.end());
     }
 
     const std::vector<Entry>& Entries() {
