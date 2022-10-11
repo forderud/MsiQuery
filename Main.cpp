@@ -101,13 +101,13 @@ std::wstring ParseMSIOrProductCode (std::wstring file_or_product) {
     if (IsGUID(file_or_product)) {
         // input is a ProductCode
         std::wcout << L"Attempting to open ProductCode " << file_or_product << L"...\n";
-        UINT ret = MsiOpenProduct(file_or_product.c_str(), &msi);
+        UINT ret = MsiOpenProductW(file_or_product.c_str(), &msi);
         if (ret != ERROR_SUCCESS)
             throw std::runtime_error("MsiOpenPackage failed");
     } else {
         // input is a MSI filename
         std::wcout << L"Attempting to open file " << file_or_product << L"...\n";
-        UINT ret = MsiOpenPackage(file_or_product.c_str(), &msi);
+        UINT ret = MsiOpenPackageW(file_or_product.c_str(), &msi);
         if (ret != ERROR_SUCCESS)
             throw std::runtime_error("MsiOpenPackage failed");
     }
@@ -165,7 +165,7 @@ void EnumerateInstalledProducts() {
 
     for (DWORD idx = 0;; ++idx) {
         std::wstring product_code(38, L'\0'); // fixed length
-        UINT ret = MsiEnumProducts(idx, const_cast<wchar_t*>(product_code.data()));
+        UINT ret = MsiEnumProductsW(idx, const_cast<wchar_t*>(product_code.data()));
         if (ret == ERROR_NO_MORE_ITEMS)
             break;
         assert(ret == ERROR_SUCCESS);

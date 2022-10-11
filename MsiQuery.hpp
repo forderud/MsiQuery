@@ -248,7 +248,7 @@ public:
     /** Query MSI database. */
     MsiQuery (std::wstring msi_path) {
         // open MSI DB
-        UINT ret = MsiOpenDatabase(msi_path.c_str(), MSIDBOPEN_READONLY, &m_db);
+        UINT ret = MsiOpenDatabaseW(msi_path.c_str(), MSIDBOPEN_READONLY, &m_db);
         if (ret != ERROR_SUCCESS)
             abort();
     }
@@ -380,7 +380,7 @@ public:
 
 private:
     bool Execute (const std::wstring& sql_query, MSIHANDLE* view) {
-        UINT ret = MsiDatabaseOpenView(m_db, sql_query.c_str(), view);
+        UINT ret = MsiDatabaseOpenViewW(m_db, sql_query.c_str(), view);
         if (ret == ERROR_BAD_QUERY_SYNTAX)
             return false; // table not found
         if (ret != ERROR_SUCCESS)
@@ -395,12 +395,12 @@ private:
 
     static std::wstring GetRecordString(MSIHANDLE record, unsigned int field) {
         DWORD buf_len = 0;
-        UINT ret = MsiRecordGetString(record, field, const_cast<wchar_t*>(L""), &buf_len);
+        UINT ret = MsiRecordGetStringW(record, field, const_cast<wchar_t*>(L""), &buf_len);
         if (ret != ERROR_MORE_DATA)
             return L"";
 
         std::wstring buffer(buf_len++, L'\0');
-        ret = MsiRecordGetString(record, field, const_cast<wchar_t*>(buffer.data()), &buf_len);
+        ret = MsiRecordGetStringW(record, field, const_cast<wchar_t*>(buffer.data()), &buf_len);
         if (ret != ERROR_SUCCESS)
             throw std::runtime_error("MsiRecordGetString failed");
 
@@ -421,12 +421,12 @@ private:
 
 static std::wstring GetTargetPath (MSIHANDLE msi, const std::wstring& folder) {
     DWORD buf_len = 0;
-    UINT ret = MsiGetTargetPath(msi, folder.c_str(), const_cast<wchar_t*>(L""), &buf_len);
+    UINT ret = MsiGetTargetPathW(msi, folder.c_str(), const_cast<wchar_t*>(L""), &buf_len);
     if (ret != ERROR_MORE_DATA)
         throw std::runtime_error("MsiGetTargetPath failed");
 
     std::wstring buffer(buf_len++, L'\0'); 
-    ret = MsiGetTargetPath(msi, folder.c_str(), const_cast<wchar_t*>(buffer.data()), &buf_len);
+    ret = MsiGetTargetPathW(msi, folder.c_str(), const_cast<wchar_t*>(buffer.data()), &buf_len);
     if (ret != ERROR_SUCCESS)
         throw std::runtime_error("MsiGetTargetPath failed");
 
