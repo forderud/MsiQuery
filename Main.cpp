@@ -51,9 +51,9 @@ void AnalyzeMsiFile(std::wstring msi_file, std::wstring * product_code) {
 
         DirectoryTable directories = query.QueryDirectory();
 
-        auto files = query.QueryFile();
+        FileTable files = query.QueryFile();
         std::vector<std::wstring> exe_files, dll_files;
-        for (const FileEntry& file : files) {
+        for (const FileTable::Entry& file : files.Entries()) {
             ComponentTable::Entry component = components.Lookup(file.Component_);
 
             std::wstring path;

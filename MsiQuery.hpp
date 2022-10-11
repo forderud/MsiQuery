@@ -131,22 +131,36 @@ struct RegEntry {
     std::wstring Component_;
 };
 
-/** https://docs.microsoft.com/en-us/windows/win32/msi/file-table */
-struct FileEntry {
-    std::wstring File;
-    std::wstring Component_;
-    std::wstring FileName; ///< stored in "short-name|long-name" format if longer than 8+3
-    //std::wstring Filesize;
-    //...
 
-    std::wstring LongFileName() const {
-        // Doc: https://learn.microsoft.com/en-us/windows/win32/msi/filename
-        size_t idx = FileName.find(L'|');
-        if (idx == std::wstring::npos)
-            return FileName; // filename 8+3 or shorter
+class FileTable {
+public:
+    /** https://docs.microsoft.com/en-us/windows/win32/msi/file-table */
+    struct Entry {
+        std::wstring File;
+        std::wstring Component_;
+        std::wstring FileName; ///< stored in "short-name|long-name" format if longer than 8+3
+        //std::wstring Filesize;
+        //...
 
-        return FileName.substr(idx+1); // remove short-name prefix
+        std::wstring LongFileName() const {
+            // Doc: https://learn.microsoft.com/en-us/windows/win32/msi/filename
+            size_t idx = FileName.find(L'|');
+            if (idx == std::wstring::npos)
+                return FileName; // filename 8+3 or shorter
+
+            return FileName.substr(idx + 1); // remove short-name prefix
+        }
+    };
+
+    FileTable(std::vector<Entry> files) : m_files(files) {
     }
+
+    const std::vector<Entry>& Entries() {
+        return m_files;
+    }
+
+private:
+    std::vector<Entry> m_files;
 };
 
 
@@ -280,11 +294,11 @@ public:
     }
 
     /** Query File table. */
-    std::vector<FileEntry> QueryFile () {
+    FileTable QueryFile () {
         PMSIHANDLE msi_view;
         Execute(L"SELECT `File`,`Component_`,`FileName` FROM `File`", &msi_view);
 
-        std::vector<FileEntry> result;
+        std::vector<FileTable::Entry> result;
         while (true) {
             PMSIHANDLE msi_record;
             UINT ret = MsiViewFetch(msi_view, &msi_record);
@@ -299,7 +313,7 @@ public:
             result.push_back({val1, val2, val3});
         }
 
-        return result;
+        return FileTable(result);
     }
 
     /** Query Directory table. */
