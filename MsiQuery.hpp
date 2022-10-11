@@ -161,11 +161,29 @@ public:
         std::sort(m_files.begin(), m_files.end());
     }
 
+    Entry Lookup(std::wstring File) {
+        // search for matching component
+        const Entry val = CreateFileEntry(File);
+        auto res = std::lower_bound(m_files.begin(), m_files.end(), val);
+        if (res == m_files.end())
+            throw std::runtime_error("Unable to find FileTable entry");
+        if (val < *res)
+            throw std::runtime_error("Unable to find FileTable entry");
+
+        return *res;
+    }
+
     const std::vector<Entry>& Entries() {
         return m_files;
     }
 
 private:
+    static Entry CreateFileEntry(std::wstring File) {
+        Entry entry;
+        entry.File = File;
+        return entry;
+    }
+
     std::vector<Entry> m_files;
 };
 
@@ -199,12 +217,15 @@ public:
         if (Directory.empty())
             return L"";
 
-        auto dir = std::lower_bound(m_directories.begin(), m_directories.end(), CreateDirectoryEntry(Directory));
-        if (dir == m_directories.end())
-            throw std::runtime_error("Unable to find DirectoryEntry");
+        const Entry val = CreateDirectoryEntry(Directory);
+        auto res = std::lower_bound(m_directories.begin(), m_directories.end(), val);
+        if (res == m_directories.end())
+            throw std::runtime_error("Unable to find DirectoryTable entry");
+        if (val < *res)
+            throw std::runtime_error("Unable to find DirectoryTable entry");
 
         // recursive lookup
-        return Lookup(dir->Directory_Parent) + L'\\' + dir->LongDefaultDir();
+        return Lookup(res->Directory_Parent) + L'\\' + res->LongDefaultDir();
     }
 
 private:
@@ -242,11 +263,14 @@ public:
 
     Entry Lookup(std::wstring Component) const {
         // search for matching component
-        auto component = std::lower_bound(m_components.begin(), m_components.end(), CreateComponentEntry(Component));
-        if (component == m_components.end())
-            throw std::runtime_error("Unable to find ComponentEntry");
+        const Entry val = CreateComponentEntry(Component);
+        auto res = std::lower_bound(m_components.begin(), m_components.end(), val);
+        if (res == m_components.end())
+            throw std::runtime_error("Unable to find ComponentTable entry");
+        if (val < *res)
+            throw std::runtime_error("Unable to find ComponentTable entry");
 
-        return *component;
+        return *res;
     }
 
 private:
