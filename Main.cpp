@@ -113,8 +113,12 @@ std::wstring ParseMSIOrProductCode (std::wstring file_or_product) {
         // input is a MSI filename
         std::wcout << L"Attempting to open file " << file_or_product << L"...\n";
         UINT ret = MsiOpenPackageW(file_or_product.c_str(), &msi);
-        if (ret != ERROR_SUCCESS)
-            throw std::runtime_error("MsiOpenPackage failed");
+        if (ret == ERROR_FILE_NOT_FOUND)
+            throw std::runtime_error("MsiOpenPackage file not found");
+        else if (ret == ERROR_INSTALL_PACKAGE_OPEN_FAILED)
+            throw std::runtime_error("MsiOpenPackage unable to open file (might be locked)");
+        else if (ret != ERROR_SUCCESS)
+            throw std::runtime_error("MsiOpenPackage unspecified error");
     }
 
     std::wstring product_code;
