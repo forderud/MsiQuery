@@ -9,6 +9,17 @@
 #include <MsiDefs.h>
 
 
+/** https://learn.microsoft.com/en-us/windows/win32/msi/feature-table */
+struct FeatureEntry {
+    std::wstring Feature;
+    std::wstring Title;
+    std::wstring Description;
+    int Display = 0;
+    int Level = 0;
+    int Attributes = 0;
+};
+
+
 /** https://docs.microsoft.com/en-us/windows/win32/msi/customaction-table */
 struct CustomActionEntry {
     /** CustomAction type parser.
@@ -299,6 +310,32 @@ public:
     }
 
     ~MsiQuery() {
+    }
+
+    std::vector<FeatureEntry> QueryFeature() {
+        PMSIHANDLE msi_view;
+        Execute(L"SELECT `Feature`,`Title`,`Description`,`Display`,`Level`,`Attributes` FROM `Feature`", &msi_view);
+
+        std::vector<FeatureEntry> result;
+        while (true) {
+            PMSIHANDLE msi_record;
+            UINT ret = MsiViewFetch(msi_view, &msi_record);
+            if (ret == ERROR_NO_MORE_ITEMS)
+                break;
+            if (ret != ERROR_SUCCESS)
+                abort();
+
+            FeatureEntry entry;
+            entry.Feature = GetRecordString(msi_record, 1);
+            entry.Title = GetRecordString(msi_record, 2);
+            entry.Description = GetRecordString(msi_record, 3);
+            entry.Display = GetRecordInt(msi_record, 4);
+            entry.Level = GetRecordInt(msi_record, 5);
+            entry.Attributes = GetRecordInt(msi_record, 6);
+            result.push_back(entry);
+        }
+
+        return result;
     }
 
     /** Query Component table. */
