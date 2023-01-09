@@ -3,8 +3,8 @@ Command-line tool for querying MSI files and installed Windows apps
 Usage: `MsiQuery.exe [*|<filename.msi>|{ProductCode}|{UpgradeCode}]` where `*` will list all installed products.
 
 The tool will list the following:
-* [ProductCode](https://docs.microsoft.com/en-us/windows/win32/msi/productcode): Unique identifier for a particular product release. Must vary for different versions and languages.
-* [UpgradeCode](https://docs.microsoft.com/en-us/windows/win32/msi/using-an-upgradecode) (if present): Product identifier that remain unchanged across  version changes.
+* [ProductCode](https://docs.microsoft.com/en-us/windows/win32/msi/productcode): Unique identifier for a particular product release. Must be changed as part of a [major version upgrade](https://learn.microsoft.com/en-us/windows/win32/msi/major-upgrades).
+* [UpgradeCode](https://docs.microsoft.com/en-us/windows/win32/msi/using-an-upgradecode) (if present): Product identifier that remain unchanged across major version changes.
 * [ProductName](https://docs.microsoft.com/en-us/windows/win32/msi/productname)
 * [ProductVersion](https://docs.microsoft.com/en-us/windows/win32/msi/productversion)
 * [Manufacturer](https://docs.microsoft.com/en-us/windows/win32/msi/manufacturer)
