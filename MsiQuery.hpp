@@ -11,11 +11,13 @@
 
 /** https://learn.microsoft.com/en-us/windows/win32/msi/feature-table */
 struct FeatureEntry {
-    std::wstring Feature;
-    std::wstring Title;
-    std::wstring Description;
-    int Display = 0;
-    int Level = 0;
+    std::wstring Feature;     ///< feature identifier [max 38 chars]
+    //std::wstring Feature_Parent;
+    std::wstring Title;       ///< short description
+    std::wstring Description; ///< longer description [localizable]
+    int Display = 0;          ///< UI order
+    int Level = 0;            ///< 0=disables installation
+    //std::wstring Directory_;
     int Attributes = 0;
 };
 
