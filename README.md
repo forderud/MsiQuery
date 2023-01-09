@@ -8,6 +8,7 @@ The following is listed for each product:
 * [ProductName](https://docs.microsoft.com/en-us/windows/win32/msi/productname)
 * [ProductVersion](https://docs.microsoft.com/en-us/windows/win32/msi/productversion)
 * [Manufacturer](https://docs.microsoft.com/en-us/windows/win32/msi/manufacturer)
+* TODO: Product [features](https://learn.microsoft.com/en-us/windows/win32/msi/windows-installer-features) and feature [installation status](https://learn.microsoft.com/en-us/windows/win32/msi/feature-table) - NOT YET IMPLEMENTED
 
 The following details are also listed:
 * [Custom Actions](https://docs.microsoft.com/en-us/windows/win32/msi/custom-actions) that might affect [system state](https://docs.microsoft.com/en-us/windows/win32/msi/changing-the-system-state-using-a-custom-action)
