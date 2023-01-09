@@ -17,6 +17,16 @@ static std::wstring ToAbsolutePath(std::wstring path) {
 
 void AnalyzeMsiFile(std::wstring msi_file, std::wstring * product_code) {
     MsiQuery query(msi_file);
+
+    {
+        std::wcout << L"Features:\n";
+        std::vector<FeatureEntry> features = query.QueryFeature();
+        for (const FeatureEntry& feature : features) {
+            std::wcout << L"  " << feature.ToString() << L'\n';
+        }
+        std::wcout << L'\n';
+    }
+
     FileTable files = query.QueryFile();
 
     {
