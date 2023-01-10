@@ -43,11 +43,13 @@ void AnalyzeMsiFile(std::wstring msi_file, std::wstring * product_code) {
         std::wcout << L"Features:\n";
         std::vector<FeatureEntry> features = query.QueryFeature();
         for (const FeatureEntry& feature : features) {
-            INSTALLSTATE state = INSTALLSTATE_UNKNOWN;
-            if (product_code)
-                state = MsiQueryFeatureStateW(product_code->c_str(), feature.Feature.c_str());
+            std::wstring install_state;
+            if (product_code) {
+                INSTALLSTATE state = MsiQueryFeatureStateW(product_code->c_str(), feature.Feature.c_str());
+                install_state = L", INSTALLSTATE=" + ToString(state);
+            }
 
-            std::wcout << L"  " << feature.ToString() << L", INSTALLSTATE=" << ToString(state) << L'\n';
+            std::wcout << L"  " << feature.ToString() << install_state << L'\n';
         }
         std::wcout << L'\n';
     }
