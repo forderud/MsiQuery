@@ -21,7 +21,7 @@ struct FeatureEntry {
     int Attributes = 0;
 
     std::wstring ToString() const {
-        return Feature + L", Title=" + Title + L", Description=" + Description + L", Display=" + std::to_wstring(Display) + L", Level=" + std::to_wstring(Level) + L", Attributes=" + std::to_wstring(Attributes);
+        return Title + L": Feature=" + Feature + L", Description=" + Description + L", Display=" + std::to_wstring(Display) + L", Level=" + std::to_wstring(Level) + L", Attributes=" + std::to_wstring(Attributes);
     }
 };
 
