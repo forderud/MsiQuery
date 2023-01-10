@@ -15,6 +15,27 @@ static std::wstring ToAbsolutePath(std::wstring path) {
     return buffer;
 }
 
+static std::wstring ToString(INSTALLSTATE state) {
+    switch (state) {
+    case INSTALLSTATE_NOTUSED: return L"NOTUSED";
+    case INSTALLSTATE_BADCONFIG: return L"BADCONFIG";
+    case INSTALLSTATE_INCOMPLETE: return L"INCOMPLETE";
+    case INSTALLSTATE_SOURCEABSENT: return L"SOURCEABSENT";
+    case INSTALLSTATE_MOREDATA: return L"MOREDATA";
+    case INSTALLSTATE_INVALIDARG: return L"INVALIDARG";
+    case INSTALLSTATE_UNKNOWN: return L"UNKNOWN";
+    case INSTALLSTATE_BROKEN: return L"BROKEN";
+    case INSTALLSTATE_ADVERTISED: return L"ADVERTISED";
+    //case INSTALLSTATE_REMOVED: return L"REMOVED";
+    case INSTALLSTATE_ABSENT: return L"ABSENT";
+    case INSTALLSTATE_LOCAL: return L"LOCAL"; // installed on local drive
+    case INSTALLSTATE_SOURCE: return L"SOURCE";
+    case INSTALLSTATE_DEFAULT: return L"DEFAULT";
+    default:
+        throw std::runtime_error("unknown INSTALLSTATE");
+    }
+}
+
 void AnalyzeMsiFile(std::wstring msi_file, std::wstring * product_code) {
     MsiQuery query(msi_file);
 
@@ -22,7 +43,11 @@ void AnalyzeMsiFile(std::wstring msi_file, std::wstring * product_code) {
         std::wcout << L"Features:\n";
         std::vector<FeatureEntry> features = query.QueryFeature();
         for (const FeatureEntry& feature : features) {
-            std::wcout << L"  " << feature.ToString() << L'\n';
+            INSTALLSTATE state = INSTALLSTATE_UNKNOWN;
+            if (product_code)
+                state = MsiQueryFeatureStateW(product_code->c_str(), feature.Feature.c_str());
+
+            std::wcout << L"  " << feature.ToString() << L", INSTALLSTATE=" << ToString(state) << L'\n';
         }
         std::wcout << L'\n';
     }
