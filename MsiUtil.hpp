@@ -55,6 +55,8 @@ static std::wstring GetComponentPath (const std::wstring& product, const std::ws
     INSTALLSTATE ret = MsiGetComponentPathW(product.c_str(), component.c_str(), nullptr, &buf_len);
     if (ret == INSTALLSTATE_ABSENT)
         throw std::runtime_error("MsiGetComponentPath returned INSTALLSTATE_ABSENT");
+    if (ret == INSTALLSTATE_UNKNOWN) // uninstalled feature
+        return L"";
     assert(ret == INSTALLSTATE_LOCAL);
 
     std::wstring buffer(buf_len++, L'\0'); 
