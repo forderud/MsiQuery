@@ -86,9 +86,13 @@
   <ItemGroup>
     <ClInclude Include="MsiQuery.hpp" />
     <ClInclude Include="MsiUtil.hpp" />
+    <ClInclude Include="resource.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="README.md" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="MsiQuery.rc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
