@@ -21,4 +21,8 @@ The following details are also listed:
 
 ## References
 * [Windows Installer](https://docs.microsoft.com/en-us/windows/win32/msi/windows-installer-portal)
-* [Description of the Windows Update Standalone Installer in Windows](https://support.microsoft.com/en-us/topic/description-of-the-windows-update-standalone-installer-in-windows-799ba3df-ec7e-b05e-ee13-1cdae8f23b19)
+
+## MicroSoft Update packages (MSU files)
+MSU files is a separate format used for distribution of Windows OS updates. They are technically archives that contain cabinet (CAB) files with updates together with XML and TXT metadata.
+
+[Description of the Windows Update Standalone Installer in Windows](https://support.microsoft.com/en-us/topic/description-of-the-windows-update-standalone-installer-in-windows-799ba3df-ec7e-b05e-ee13-1cdae8f23b19).
