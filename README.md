@@ -18,6 +18,7 @@ The following details are also listed:
 
 ## Related tools
 * [Orca](https://docs.microsoft.com/en-us/windows/win32/msi/orca-exe) MSI viewer: Included with Windows 10 SDK. By default installed to `%ProgramFiles(x86)%\Windows Kits\10\bin\<version>\x86\Orca-x86_en-us.msi`
+* [msitools](https://gitlab.gnome.org/GNOME/msitools) for building & inspecing MSI files on Linux/Mac.
 
 ## References
 * [Windows Installer](https://docs.microsoft.com/en-us/windows/win32/msi/windows-installer-portal)
