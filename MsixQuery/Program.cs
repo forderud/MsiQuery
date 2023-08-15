@@ -11,8 +11,8 @@ void GetManagementPackages()
         Console.WriteLine("Package info:");
         Console.WriteLine("  DisplayName: "+pkg.DisplayName);
         Console.WriteLine("  Id: " + pkg.Id.FullName);
-        var ver = pkg.Id.Version;
-        Console.WriteLine("  Version: " + ver.Major+"."+ver.Minor+"."+ver.Revision+"."+ver.Build);
+        PackageVersion ver = pkg.Id.Version;
+        Console.WriteLine($"  Version: {ver.Major}.{ver.Minor}.{ver.Build}.{ver.Revision}");
     }
 }
 
