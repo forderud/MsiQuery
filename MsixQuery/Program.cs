@@ -13,6 +13,7 @@ void GetManagementPackages()
         Console.WriteLine("  Id: " + pkg.Id.FullName);
         PackageVersion ver = pkg.Id.Version;
         Console.WriteLine($"  Version: {ver.Major}.{ver.Minor}.{ver.Build}.{ver.Revision}");
+        Console.WriteLine("  InstalledDate: " + pkg.InstalledDate);
     }
 }
 
