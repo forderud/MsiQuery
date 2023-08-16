@@ -65,6 +65,43 @@ MSU files is a separate format used for distribution of Windows OS updates. They
 
 [Description of the Windows Update Standalone Installer in Windows](https://support.microsoft.com/en-us/topic/description-of-the-windows-update-standalone-installer-in-windows-799ba3df-ec7e-b05e-ee13-1cdae8f23b19).
 
+
+### Sample scripts for OS version
+Get OS version:
+```
+PS > Get-WmiObject Win32_OperatingSystem
+
+SystemDirectory : C:\Windows\system32
+Organization    : <org-name>
+BuildNumber     : 19044
+RegisteredUser  : <user>
+SerialNumber    : <serial>
+Version         : 10.0.19044
+```
+
+Get list of installed hotfixes (KB's):
+```
+PS > Get-HotFix
+
+Source        Description      HotFixID      InstalledBy          InstalledOn
+------        -----------      --------      -----------          -----------
+MYMACHINE     Update           KB5027122     NT AUTHORITY\SYSTEM  2023-06-23 12:00:00 AM
+MYMACHINE     Update           KB5003791                          2021-10-06 12:00:00 AM
+MYMACHINE     Security Update  KB5012170     NT AUTHORITY\SYSTEM  2022-12-14 12:00:00 AM
+MYMACHINE     Security Update  KB5028166     NT AUTHORITY\SYSTEM  2023-07-28 12:00:00 AM
+MYMACHINE     Security Update  KB5014032     NT AUTHORITY\SYSTEM  2022-11-11 12:00:00 AM
+MYMACHINE     Update           KB5016705     NT AUTHORITY\SYSTEM  2022-11-11 12:00:00 AM
+MYMACHINE     Update           KB5018506     NT AUTHORITY\SYSTEM  2022-11-21 12:00:00 AM
+MYMACHINE     Update           KB5020372     NT AUTHORITY\SYSTEM  2022-12-21 12:00:00 AM
+MYMACHINE     Update           KB5022924     NT AUTHORITY\SYSTEM  2023-03-23 12:00:00 AM
+MYMACHINE     Update           KB5023794     NT AUTHORITY\SYSTEM  2023-04-21 12:00:00 AM
+MYMACHINE     Update           KB5025315     NT AUTHORITY\SYSTEM  2023-05-18 12:00:00 AM
+MYMACHINE     Update           KB5026879     NT AUTHORITY\SYSTEM  2023-06-23 12:00:00 AM
+MYMACHINE     Update           KB5028318     NT AUTHORITY\SYSTEM  2023-07-20 12:00:00 AM
+MYMACHINE     Security Update  KB5005699                          2021-10-06 12:00:00 AM
+```
+
+
 ## Return codes
 Installers are using the following return-codes to signal installation result:
 
