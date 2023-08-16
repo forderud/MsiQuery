@@ -31,6 +31,14 @@ The [ParseMSI.ps1](./ParseMSI.ps1) script can be used to detect installed MSI ap
 ## References
 * [Windows Installer](https://docs.microsoft.com/en-us/windows/win32/msi/windows-installer-portal)
 
+
+## MSIX packages
+Microsoft is recommending to migrate to the newer [MSIX](https://learn.microsoft.com/en-us/windows/msix/overview) installer format. However, it's more restrictive with limitations on inter-app communication. Also, tooling support is lagging behind - at least for Qt (see [How to package a Win32 desktop app in MSIX?](https://bugreports.qt.io/browse/QTBUG-97088)). Adoption can therefore be challenging.
+
+### MsixQuery tool
+The MsixQuery tool can be used to detect installed MSIX apps.
+
+
 ## MicroSoft Update packages (MSU files)
 MSU files is a separate format used for distribution of Windows OS updates. They are technically archives that contain cabinet (CAB) files with updates together with XML and TXT metadata.
 
