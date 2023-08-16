@@ -63,6 +63,23 @@ MSU files is a separate format used for distribution of Windows OS updates. They
 
 [Description of the Windows Update Standalone Installer in Windows](https://support.microsoft.com/en-us/topic/description-of-the-windows-update-standalone-installer-in-windows-799ba3df-ec7e-b05e-ee13-1cdae8f23b19).
 
+## Return codes
+Installers are using the following return-codes to signal installation result:
+
+| Code | Interpretation |
+|------|----------------|
+| 0    | Success (installation completed successfully) |
+| 1707 | Success (installation completed successfully) |
+| 3010 | Soft reboot (restart is required to complete the install) |
+| 1641 | Hard reboot (installer have initiated a restart) |
+| 1618 | Retry (another installation is already in progress) |
+|      | Other values are treated as failure |
+
+The above codes are used by InTune and probably other MDM solutions to detect installation success/failure and retry or restart if needed afterwards. We should therefore do the same.
+
+The codes are documented on https://learn.microsoft.com/en-us/windows/win32/msi/error-codes and https://learn.microsoft.com/en-us/windows/win32/msi/windows-installer-error-messages
+
+
 ## References
 Related tools:
 * [Orca](https://docs.microsoft.com/en-us/windows/win32/msi/orca-exe) MSI viewer: Included with Windows 10 SDK. By default installed to `%ProgramFiles(x86)%\Windows Kits\10\bin\<version>\x86\Orca-x86_en-us.msi`
