@@ -8,9 +8,9 @@ void GetManagementPackages()
     //var pkgs = mgr.FindPackages(); // require admin privileges
 
     // filter out system packages (not shown in "Apps & features")
-    pkgs = pkgs.Where(elm => elm.SignatureKind != PackageSignatureKind.System).ToList();
+    pkgs = pkgs.Where(_ => _.SignatureKind != PackageSignatureKind.System).ToList();
     // filter out frameworks (not shown in "Apps & features")
-    pkgs = pkgs.Where(elm => elm.IsFramework == false).ToList();
+    pkgs = pkgs.Where(_ => _.IsFramework == false).ToList();
 
     Console.WriteLine($"Found {pkgs.Count()} packages.");
 
