@@ -21,7 +21,7 @@ The following details are also listed:
 ### AppDetect script
 The [AppDetect.ps1](./AppDetect.ps1) script can be used to detect installed EXE and MSI applications through a [registry scan](https://learn.microsoft.com/en-us/windows/win32/msi/uninstall-registry-key).
 
-## ParseMSI script
+### ParseMSI script
 The [ParseMSI.ps1](./ParseMSI.ps1) script can be used to detect installed MSI applications through the [WindowsInstaller](https://learn.microsoft.com/en-us/windows/win32/msi/installer-object) COM interfaces.
 
 ## Related tools
