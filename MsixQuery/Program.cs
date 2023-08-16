@@ -6,8 +6,10 @@ void GetManagementPackages()
     var mgr = new PackageManager();
     var pkgs = mgr.FindPackagesForUser("");
 
-    // filter out system packages
+    // filter out system packages (not shown in "Apps & features")
     pkgs = pkgs.Where(elm => elm.SignatureKind != PackageSignatureKind.System).ToList();
+    // filter out frameworks (not shown in "Apps & features")
+    pkgs = pkgs.Where(elm => elm.IsFramework == false).ToList();
 
     foreach (Package pkg in pkgs)
     {
