@@ -1,4 +1,30 @@
+Standard metadata and installation practices involved in application & OS-updates on Windows computers. Other operating systems have similar but different metadata and practices.
+
+## Application packages
+
+Overview of categories of SW installers supported by Windows:
+| Category | Installation process | Installer metadata | Detection and uninstallation |
+|----------|----------------------|--------------------|------------------------------|
+| Executable (or script) | App-specific (command-line arguments and return codes not standardized) | In general not parseable, since the installer is a black-box that Windows doesn't understand | Standard registry location |
+| MSI      | Standardized (using `msiexec`) | Contains metadata that can be parsed. The installation steps can also be statically analyzed to asses security risk| MSI APIs or standard registry location |
+| MSIX     | Standardized (using APIs) | Contains metadata that can be parsed. The installation steps can also be statically analyzed to asses security risk | `Get-AppxPackage` |
+
+**Package identifier**: `ProductCode` (128bit unique GUID for MSI), `PackageFullName` string (for MSIX) or similar. All SW applications that show up in the Windows control panel for uninstallation does have a unique identifier.
+
+The source of truth for installed EXE and MSI apps are the `HKLM\Software\Microsoft\Windows\CurrentVersion\Uninstall\{ProductCode}` registry folders.
+
 ## Windows Installer packages (MSI files)
+**Format**: MSI (self-described format with metadata). Primarily designed for application SW, but drivers and system configuration can also be MSI-packaged for unified installation.
+
+Common operations:
+| Operation | Description |
+|-----------|-------------|
+| Install | `msiexec.exe /i <appname>.msi /qn` (background installation) |
+| Uninstall | Command in `HKLM\Software\Microsoft\Windows\CurrentVersion\Uninstall\{ProductCode}\UninstallString` registry key (`msiexec /x "{ProductCode}" /qn` for MSI apps)|
+| Upgrade | `msiexec.exe /i <appname>.msi /qn` (will automatically uninstall the old version before installing the new version and perform migration steps) |
+| Downgrade | Achieved through _uninstall_ followed by _install_ of the old version. |
+| Identify ProductCode | Check MsiQuery for code sample. |
+| Check if installed | Check MsiQuery for code sample. |
 
 ### MsiQuery tool
 Command-line tool for querying MSI files and installed Windows apps
