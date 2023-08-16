@@ -21,6 +21,9 @@ The following details are also listed:
 ### AppDetect script
 The [AppDetect.ps1](./AppDetect.ps1) script can be used to detect installed EXE and MSI applications through a registry scan.
 
+## ParseMSI script
+The [ParseMSI.ps1](./ParseMSI.ps1) script can be used to detect installed MSI applications through the [WindowsInstaller](https://learn.microsoft.com/en-us/windows/win32/msi/installer-object) COM interfaces.
+
 ## Related tools
 * [Orca](https://docs.microsoft.com/en-us/windows/win32/msi/orca-exe) MSI viewer: Included with Windows 10 SDK. By default installed to `%ProgramFiles(x86)%\Windows Kits\10\bin\<version>\x86\Orca-x86_en-us.msi`
 * [msitools](https://gitlab.gnome.org/GNOME/msitools) for building & inspecing MSI files on Linux/Mac.
