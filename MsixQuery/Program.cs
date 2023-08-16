@@ -6,6 +6,9 @@ void GetManagementPackages()
     var mgr = new PackageManager();
     var pkgs = mgr.FindPackagesForUser("");
 
+    // filter out system packages
+    pkgs = pkgs.Where(elm => elm.SignatureKind != PackageSignatureKind.System).ToList();
+
     foreach (Package pkg in pkgs)
     {
         Console.WriteLine("Package info:");
