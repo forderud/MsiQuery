@@ -19,7 +19,7 @@ The following details are also listed:
 * Added [registry entries](https://docs.microsoft.com/en-us/windows/win32/msi/registry-table) (can also be created through custom actions)
 
 ### AppDetect script
-The [AppDetect.ps1](./AppDetect.ps1) script can be used to detect installed EXE and MSI applications through a registry scan.
+The [AppDetect.ps1](./AppDetect.ps1) script can be used to detect installed EXE and MSI applications through a [registry scan](https://learn.microsoft.com/en-us/windows/win32/msi/uninstall-registry-key).
 
 ## ParseMSI script
 The [ParseMSI.ps1](./ParseMSI.ps1) script can be used to detect installed MSI applications through the [WindowsInstaller](https://learn.microsoft.com/en-us/windows/win32/msi/installer-object) COM interfaces.
