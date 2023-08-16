@@ -47,6 +47,8 @@ The following details are also listed:
 ### AppDetect script
 The [AppDetect.ps1](./AppDetect.ps1) script can be used to detect installed EXE and MSI applications through a [registry scan](https://learn.microsoft.com/en-us/windows/win32/msi/uninstall-registry-key).
 
+It's possible to use the `Get-WmiObject Win32_Product` command to list all MSI-installed apps with ProductCode on the system. However, this listing will not include EXE-installed apps without a ProductCode, like 7-zip and Notepad++. It's therefore insufficient if we also want to support non-MSI installers.
+
 ### ParseMSI script
 The [ParseMSI.ps1](./ParseMSI.ps1) script can be used to detect installed MSI applications through the [WindowsInstaller](https://learn.microsoft.com/en-us/windows/win32/msi/installer-object) COM interfaces.
 
