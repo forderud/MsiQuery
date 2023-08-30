@@ -4,7 +4,7 @@ $apps += Get-ItemProperty "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Unins
 
 # Filter out apps without name and system components (hidden from control panel)
 $apps = $apps | Where-Object {
-    $_.DisplayName -and $_.SystemComponent -ne 1
+    $_.DisplayName -and ($_.SystemComponent -ne 1)
 }
 
 # List MSI- and EXE-installed apps
