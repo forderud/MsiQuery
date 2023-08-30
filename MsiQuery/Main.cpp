@@ -179,7 +179,8 @@ std::wstring ParseMSIOrProductCode (std::wstring file_or_product) {
         std::wcout << L"MSI properties:\n";
         std::wcout << L"  ProductCode: " << product_code << L"\n";
         std::wcout << L"  UpgradeCode: " << upgrade_code << L"\n";
-        std::wcout << L"  ProductName: " << product_name << L" (" << product_ver << L")\n";
+        std::wcout << L"  ProductName: " << product_name << L"\n";
+        std::wcout << L"  ProductVersion: " << product_ver << L"\n";
         std::wcout << L"  Manufacturer: " << manufacturer << L"\n";
         std::wcout << L"\n";
     }
@@ -233,6 +234,7 @@ void EnumerateInstalledProducts() {
 #else
         try {
             ParseMSIOrProductCode(product_code); // slower, but also gives UpgradeCode
+            ParseInstalledApp(product_code);
         } catch (const std::exception & err) {
             std::wcout << L"  ERROR: " << ToUnicode(err.what()) << L'\n';
         }
