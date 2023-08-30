@@ -11,6 +11,11 @@
         <Feature Id="ProductFeature" Title="ScheduleReboot" Level="1">
             <ComponentGroupRef Id="ProductComponents" />
         </Feature>
+
+        <InstallExecuteSequence>
+            <!-- https://learn.microsoft.com/en-us/windows/win32/msi/schedulereboot-action -->
+            <ScheduleReboot After="InstallFinalize"/>
+        </InstallExecuteSequence>
     </Product>
 
     <Fragment>
