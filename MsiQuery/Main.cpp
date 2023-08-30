@@ -209,7 +209,7 @@ std::wstring ParseInstalledApp (std::wstring product_code) {
         std::wcout << L"  Version: " << version << L"\n";
         std::wcout << L"  Publisher: " << publisher << L"\n";
         std::wcout << L"  InstallDate: " << inst_date << L"\n";
-        std::wcout << L"  MSI cache: " << msi_cache_file << L"\n";
+        //std::wcout << L"  MSI cache: " << msi_cache_file << L"\n";
     }
 
     return msi_cache_file;
