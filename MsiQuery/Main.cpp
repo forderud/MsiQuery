@@ -233,7 +233,9 @@ void EnumerateInstalledProducts() {
 #else
         try {
             ParseMSIOrProductCode(product_code); // slower, but also gives UpgradeCode
-        } catch (const std::exception &) {/*discard errors*/}
+        } catch (const std::exception & err) {
+            std::wcout << L"  ERROR: " << ToUnicode(err.what()) << L'\n';
+        }
 #endif
     }
 }

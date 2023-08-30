@@ -7,6 +7,20 @@
 #include <msi.h>
 
 
+/** Converts ASCII string to unicode */
+inline std::wstring ToUnicode(const std::string& s_str) {
+#ifdef _MSC_VER
+#pragma warning(push)
+#pragma warning(disable: 4996) // function or variable may be unsafe
+#endif
+    std::wstring w_str(s_str.size(), L'\0');
+    mbstowcs(const_cast<wchar_t*>(w_str.data()), s_str.c_str(), w_str.size());
+#ifdef _MSC_VER
+#pragma warning(pop)
+#endif
+    return w_str;
+}
+
 /** Get info about a MSI product that is not neccesarily installed. */
 static std::wstring GetProductProperty (MSIHANDLE msi, const wchar_t* property, bool throw_on_failure = true) {
     DWORD buf_len = 0;
