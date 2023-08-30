@@ -179,9 +179,9 @@ std::wstring ParseMSIOrProductCode (std::wstring file_or_product) {
         std::wcout << L"MSI properties:\n";
         std::wcout << L"  ProductCode: " << product_code << L"\n";
         std::wcout << L"  UpgradeCode: " << upgrade_code << L"\n";
-        std::wcout << L"  ProductName: " << product_name << L"\n";
-        std::wcout << L"  ProductVersion: " << product_ver << L"\n";
-        std::wcout << L"  Manufacturer: " << manufacturer << L"\n";
+        //std::wcout << L"  ProductName: " << product_name << L"\n";
+        //std::wcout << L"  ProductVersion: " << product_ver << L"\n";
+        //std::wcout << L"  Manufacturer: " << manufacturer << L"\n";
     }
 
     return product_code;
