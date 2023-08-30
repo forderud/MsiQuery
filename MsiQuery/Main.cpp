@@ -182,7 +182,6 @@ std::wstring ParseMSIOrProductCode (std::wstring file_or_product) {
         std::wcout << L"  ProductName: " << product_name << L"\n";
         std::wcout << L"  ProductVersion: " << product_ver << L"\n";
         std::wcout << L"  Manufacturer: " << manufacturer << L"\n";
-        std::wcout << L"\n";
     }
 
     return product_code;
@@ -211,7 +210,6 @@ std::wstring ParseInstalledApp (std::wstring product_code) {
         std::wcout << L"  Publisher: " << publisher << L"\n";
         std::wcout << L"  InstallDate: " << inst_date << L"\n";
         std::wcout << L"  MSI cache: " << msi_cache_file << L"\n";
-        std::wcout << L"\n";
     }
 
     return msi_cache_file;
@@ -270,7 +268,9 @@ int wmain (int argc, wchar_t *argv[]) {
             }
 
             product_code = ParseMSIOrProductCode(argument);
+            std::wcout << L"\n";
             std::wstring msi_cache_file = ParseInstalledApp(product_code);
+            std::wcout << L"\n";
             if (msi_cache_file.size() > 0) {
                 std::wcout << L"Application is already installed. Will also analyze installed files.\n\n";
 
