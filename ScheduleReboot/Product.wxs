@@ -15,7 +15,7 @@
 
     <Fragment>
         <Directory Id="TARGETDIR" Name="SourceDir">
-            <Directory Id="ProgramFilesFolder">
+            <Directory Id="ProgramFiles64Folder">
                 <Directory Id="INSTALLFOLDER" Name="ScheduleReboot" />
             </Directory>
         </Directory>
@@ -23,6 +23,9 @@
 
     <Fragment>
         <ComponentGroup Id="ProductComponents" Directory="INSTALLFOLDER">
+            <Component Id="README.txt" Guid="*">
+                <File Id="README.txt" KeyPath="yes" Source="README.txt" />
+            </Component>
         </ComponentGroup>
     </Fragment>
 </Wix>
