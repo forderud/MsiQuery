@@ -7,6 +7,6 @@ Doc: https://learn.microsoft.com/en-us/windows/win32/msi/error-codes
 
 Run the following commands from a batch script:
 ```
-start /wait msiexec.exe /i ScheduleReboot
+start /wait msiexec.exe /i ScheduleReboot.msi
 echo msiexec exit code: %ERRORLEVEL%
 ```
