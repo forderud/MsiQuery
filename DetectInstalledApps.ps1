@@ -1,4 +1,4 @@
-# Detect MSI- and EXE-baed installed apps
+# Detect MSI- and EXE-based installed apps
 # Will return approx. the same results as what's listed in "Apps & features" in Windows Settings.
 # However, MSIX-based apps are not detected.
 $apps = @()
@@ -11,8 +11,7 @@ $apps = $apps | Where-Object {
 }
 
 # List installed apps
-foreach($app in $apps)
-{
+foreach($app in $apps) {
     # check if app has UpgradeCode
     $UpgradeCode = Get-WmiObject -Query "SELECT Value FROM Win32_Property WHERE Property='UpgradeCode' AND ProductCode='$($app.PSChildName)'"
     
