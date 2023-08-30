@@ -19,8 +19,8 @@ foreach($app in $apps)
     Write-Host ""
     Write-Host ID: $app.PSChildName            # primary identifier (might vary between versions)
     Write-Host UpgradeCode: $UpgradeCode.Value # stable identifier that does _not_ change between versions (optional)
-    Write-Host DisplayName: $app.DisplayName
-    Write-Host DisplayVersion: $app.DisplayVersion
+    Write-Host Name: $app.DisplayName
+    Write-Host Version: $app.DisplayVersion
     Write-Host Publisher: $app.Publisher
     Write-Host InstallDate: $app.InstallDate
 }
