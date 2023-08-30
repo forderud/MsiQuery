@@ -4,7 +4,7 @@
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">x64</Platform>
     <ProductVersion>3.10</ProductVersion>
-    <ProjectGuid>311008ee-b26a-4d88-8249-94103288d156</ProjectGuid>
+    <ProjectGuid>{311008ee-b26a-4d88-8249-94103288d156}</ProjectGuid>
     <SchemaVersion>2.0</SchemaVersion>
     <OutputName>ScheduleReboot</OutputName>
     <OutputType>Package</OutputType>
