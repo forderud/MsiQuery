@@ -226,6 +226,7 @@ void EnumerateInstalledProducts() {
             break;
         assert(ret == ERROR_SUCCESS);
 
+        std::wcout << L"\n";
         std::wcout << idx << L": ProductCode: " << product_code << L'\n';
 #ifndef EXTENDED_INFO
         std::wstring msi_cache_file = ParseInstalledApp(product_code);
