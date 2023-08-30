@@ -11,5 +11,9 @@ $apps = $apps | Where-Object {
 foreach($app in $apps)
 {
     Write-Host ""
-    Write-Host $app
+    Write-Host ID: $app.PSChildName
+    Write-Host DisplayName: $app.DisplayName
+    Write-Host DisplayVersion: $app.DisplayVersion
+    Write-Host Publisher: $app.Publisher
+    Write-Host InstallDate: $app.InstallDate
 }
