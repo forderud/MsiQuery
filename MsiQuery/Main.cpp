@@ -269,7 +269,6 @@ int wmain (int argc, wchar_t *argv[]) {
             }
 
             product_code = ParseMSIOrProductCode(argument);
-            std::wcout << L"\n";
             std::wstring msi_cache_file = ParseInstalledApp(product_code);
             std::wcout << L"\n";
             if (msi_cache_file.size() > 0) {
