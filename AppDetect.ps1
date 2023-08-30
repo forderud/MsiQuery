@@ -7,5 +7,9 @@ $apps = $apps | Where-Object {
     $_.DisplayName -and $_.SystemComponent -ne 1
 }
 
-# Write information about the first app
-Write-Host $apps[0]
+# List MSI- and EXE-installed apps
+foreach($app in $apps)
+{
+    Write-Host ""
+    Write-Host $app
+}
