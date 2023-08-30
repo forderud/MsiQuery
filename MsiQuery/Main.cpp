@@ -150,7 +150,7 @@ std::wstring ParseMSIOrProductCode (std::wstring file_or_product) {
     PMSIHANDLE msi;
     if (IsGUID(file_or_product)) {
         // input is a ProductCode
-        std::wcout << L"Attempting to open ProductCode " << file_or_product << L"...\n";
+        //std::wcout << L"Attempting to open ProductCode " << file_or_product << L"...\n";
         UINT ret = MsiOpenProductW(file_or_product.c_str(), &msi);
         if (ret != ERROR_SUCCESS)
             throw std::runtime_error("MsiOpenPackage failed");
