@@ -1,0 +1,1 @@
+Dummy application for testing of reboot handling.

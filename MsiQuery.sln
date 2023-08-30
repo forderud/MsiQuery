@@ -5,7 +5,9 @@ VisualStudioVersion = 17.4.33927.135
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MsiQuery", "MsiQuery\MsiQuery.vcxproj", "{0C6B0F58-DAAE-4E82-9F1B-B1C6F9ECD490}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MsixQuery", "MsixQuery\MsixQuery.csproj", "{79881CF3-6FE8-48CE-8346-AFA275322030}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MsixQuery", "MsixQuery\MsixQuery.csproj", "{79881CF3-6FE8-48CE-8346-AFA275322030}"
+EndProject
+Project("{930C7802-8A8C-48F9-8165-68863BCCD9DD}") = "ScheduleReboot", "ScheduleReboot\ScheduleReboot.wixproj", "{311008EE-B26A-4D88-8249-94103288D156}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,10 @@ Global
 		{79881CF3-6FE8-48CE-8346-AFA275322030}.Debug|x64.Build.0 = Debug|Any CPU
 		{79881CF3-6FE8-48CE-8346-AFA275322030}.Release|x64.ActiveCfg = Release|Any CPU
 		{79881CF3-6FE8-48CE-8346-AFA275322030}.Release|x64.Build.0 = Release|Any CPU
+		{311008EE-B26A-4D88-8249-94103288D156}.Debug|x64.ActiveCfg = Debug|x64
+		{311008EE-B26A-4D88-8249-94103288D156}.Debug|x64.Build.0 = Debug|x64
+		{311008EE-B26A-4D88-8249-94103288D156}.Release|x64.ActiveCfg = Release|x64
+		{311008EE-B26A-4D88-8249-94103288D156}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+    <Product Id="*" Name="ScheduleReboot" Language="1033" Version="1.0.0.0" Manufacturer="MsiQuery project" UpgradeCode="0d2456ba-6b7e-46aa-bec2-428f174081cf">
+        <Package InstallerVersion="500" Compressed="yes" InstallScope="perMachine" />
+
+        <!-- Disable downgrades, prevent side-by-side installations of same version -->
+        <MajorUpgrade DowngradeErrorMessage="A newer version of [ProductName] is already installed." AllowSameVersionUpgrades="yes"/>
+        <!-- Embed binaries inside MSI instead of separate CAB files -->
+        <MediaTemplate EmbedCab="yes"/>
+
+        <Feature Id="ProductFeature" Title="ScheduleReboot" Level="1">
+            <ComponentGroupRef Id="ProductComponents" />
+        </Feature>
+
+        <InstallExecuteSequence>
+            <!-- https://learn.microsoft.com/en-us/windows/win32/msi/schedulereboot-action -->
+            <ScheduleReboot After="InstallFinalize"/>
+        </InstallExecuteSequence>
+    </Product>
+
+    <Fragment>
+        <Directory Id="TARGETDIR" Name="SourceDir">
+            <Directory Id="ProgramFiles64Folder">
+                <Directory Id="INSTALLFOLDER" Name="ScheduleReboot" />
+            </Directory>
+        </Directory>
+    </Fragment>
+
+    <Fragment>
+        <ComponentGroup Id="ProductComponents" Directory="INSTALLFOLDER">
+            <Component Id="README.txt" Guid="*">
+                <File Id="README.txt" KeyPath="yes" Source="README.txt" />
+            </Component>
+        </ComponentGroup>
+    </Fragment>
+</Wix>
