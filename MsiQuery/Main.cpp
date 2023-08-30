@@ -205,7 +205,8 @@ std::wstring ParseInstalledApp (std::wstring product_code) {
         std::wstring inst_date = GetProductInfo(product_code, INSTALLPROPERTY_INSTALLDATE); // "YYYYMMDD" format
 
         std::wcout << L"Installed properties:\n";
-        std::wcout << L"  InstalledProductName: " << inst_name << L" (" << version << L")\n";
+        std::wcout << L"  InstalledProductName: " << inst_name << L"\n";
+        std::wcout << L"  Version: " << version << L"\n";
         std::wcout << L"  Publisher: " << publisher << L"\n";
         std::wcout << L"  InstallDate: " << inst_date << L"\n";
         std::wcout << L"  MSI cache: " << msi_cache_file << L"\n";
