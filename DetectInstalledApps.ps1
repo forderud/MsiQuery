@@ -12,7 +12,7 @@ $apps = $apps | Where-Object {
 
 # List installed apps
 foreach($app in $apps) {
-    # check if app has UpgradeCode
+    # check if app has UpgradeCode (slow call that can be optimized)
     $UpgradeCode = Get-WmiObject -Query "SELECT Value FROM Win32_Property WHERE Property='UpgradeCode' AND ProductCode='$($app.PSChildName)'"
     
     Write-Host ProductCode: $app.PSChildName   # primary identifier - guid or string (might vary between versions)
