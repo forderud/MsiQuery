@@ -1,6 +1,8 @@
 # Detect MSI- and EXE-based installed apps
 # Will return approx. the same results as what's listed in "Apps & features" in Windows Settings.
-# However, MSIX-based apps are not detected.
+# Limitation: MSIX-based apps are not included.
+#
+# Documentation: https://learn.microsoft.com/en-us/windows/win32/msi/uninstall-registry-key
 $apps = @()
 $apps += Get-ItemProperty "HKLM:\SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall\*" # 32bit apps
 $apps += Get-ItemProperty "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\*" # 64bit apps
