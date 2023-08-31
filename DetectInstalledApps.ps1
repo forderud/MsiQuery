@@ -14,7 +14,8 @@ $apps = $apps | Where-Object {
 
 # List installed apps
 foreach($app in $apps) {
-    # check if app has UpgradeCode (slow call that can be optimized)
+    # Check if app has version-independent UpgradeCode
+    # Call can be optimized as documented on https://community.flexera.com/t5/InstallShield-Knowledge-Base/Locating-MSI-Upgrade-Codes-in-the-Windows-Registry/ta-p/4317
     $UpgradeCode = Get-WmiObject -Query "SELECT Value FROM Win32_Property WHERE Property='UpgradeCode' AND ProductCode='$($app.PSChildName)'"
     
     Write-Host ProductCode: $app.PSChildName   # REQUIRED primary identifier - guid or string (might vary between versions)
