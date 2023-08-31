@@ -15,11 +15,11 @@ foreach($app in $apps) {
     # check if app has UpgradeCode
     $UpgradeCode = Get-WmiObject -Query "SELECT Value FROM Win32_Property WHERE Property='UpgradeCode' AND ProductCode='$($app.PSChildName)'"
     
-    Write-Host ""
     Write-Host ProductCode: $app.PSChildName   # primary identifier - guid or string (might vary between versions)
     Write-Host UpgradeCode: $UpgradeCode.Value # stable identifier that does _not_ change between versions (optional)
     Write-Host Name: $app.DisplayName
     Write-Host Version: $app.DisplayVersion
     Write-Host Publisher: $app.Publisher
     Write-Host InstallDate: $app.InstallDate
+    Write-Host ""
 }
