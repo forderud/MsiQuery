@@ -1,7 +1,5 @@
 ﻿<Wix xmlns="http://wixtoolset.org/schemas/v4/wxs">
     <Package Name="ScheduleReboot" Language="1033" Version="1.0.0.0" Manufacturer="MsiQuery project" UpgradeCode="0d2456ba-6b7e-46aa-bec2-428f174081cf">
-        
-
         <!-- Disable downgrades, prevent side-by-side installations of same version -->
         <MajorUpgrade DowngradeErrorMessage="A newer version of [ProductName] is already installed." AllowSameVersionUpgrades="yes" />
         <!-- Embed binaries inside MSI instead of separate CAB files -->
@@ -18,10 +16,10 @@
     </Package>
 
     <Fragment>
-            <StandardDirectory Id="ProgramFiles64Folder">
-                <Directory Id="INSTALLFOLDER" Name="ScheduleReboot" />
-            </StandardDirectory>
-        </Fragment>
+        <StandardDirectory Id="ProgramFiles64Folder">
+            <Directory Id="INSTALLFOLDER" Name="ScheduleReboot" />
+        </StandardDirectory>
+    </Fragment>
 
     <Fragment>
         <ComponentGroup Id="ProductComponents" Directory="INSTALLFOLDER">
