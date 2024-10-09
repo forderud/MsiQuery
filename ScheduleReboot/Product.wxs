@@ -12,7 +12,8 @@
         </Feature>
     </Package>
 
-    <Fragment>
+    <Bundle Name="Moonlight Game Streaming Client"
+            UpgradeCode="DFC3EA1A-353B-49CF-B7D8-BA7E9F04F9F7" Version="1">
         <!-- Visual C++ 2015-2022 Redistributable (x64) version check. Returns 0.0.0.0 if not found (https://wixtoolset.org/docs/schema/util/productsearch/) -->
         <util:ProductSearch Id="VCREDIST_x64_UC_CHECK"
             UpgradeCode="36F68A90-239C-34DF-B58C-64B30153CE35"
@@ -20,19 +21,21 @@
             Variable="VCREDIST_x64_VER" />
 
         <!-- <util:FileSearch Id="VCREDIST_x64_FILE_CHECK"
-            Path="vcruntime140.dll"
-            Result="version"
-            Variable="VCREDIST_x64_VER2" /> -->
-        
-        <PackageGroup Id="VisualCppRuntime">
+        Path="vcruntime140.dll"
+        Result="version"
+        Variable="VCREDIST_x64_VER2" /> -->
+
+        <Chain>
             <!-- https://wixtoolset.org/docs/schema/wxs/exepackage/ -->
-            <ExePackage InstallArguments="/install /quiet /norestart" UninstallArguments="/uninstall /quiet /norestart"
-                        PerMachine="yes" DetectCondition="VCREDIST_x64_VER != v0.0.0.0" InstallCondition="VCREDIST_x64_VER &gt;= v14.32.31332.0"
-                        Id="VCREDIST_INSTALL" Permanent="yes" LogPathVariable="NetFx48WebLog">
+            <ExePackage Cache="remove" PerMachine="yes" Permanent="yes"
+                        DetectCondition="VCREDIST_x64_VER != v0.0.0.0" InstallCondition="VCREDIST_x64_VER &gt;= v14.32.31332.0"
+                        InstallArguments="/install /quiet /norestart">
                 <ExePackagePayload Name="vc_redist.x64.exe" DownloadUrl="https://aka.ms/vs/17/release/vc_redist.x64.exe" />
             </ExePackage>
-        </PackageGroup>
-
+        </Chain>
+    </Bundle>
+    
+    <Fragment>
         <!-- Precondition check (https://wixtoolset.org/docs/schema/bal/condition/) -->
 <!--        <bal:Condition Condition="VCREDIST_x64_VER1 &gt;= v14.32.31332.0" Message="Microsoft Visual C++ 2015-2022 (x64) Redistributable missing" /> -->
 
