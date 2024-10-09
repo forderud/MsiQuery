@@ -28,11 +28,8 @@
             <!-- https://wixtoolset.org/docs/schema/wxs/exepackage/ -->
             <ExePackage InstallArguments="/install /quiet /norestart" UninstallArguments="/uninstall /quiet /norestart"
                         PerMachine="yes" DetectCondition="VCREDIST_x64_VER != v0.0.0.0" InstallCondition="VCREDIST_x64_VER &gt;= v14.32.31332.0"
-                        Id="VCREDIST_INSTALL" Vital="yes" Permanent="yes" Protocol="netfx4" LogPathVariable="NetFx48WebLog">
-                <ExePackagePayload Name="vc_redist.x64.exe" DownloadUrl="https://aka.ms/vs/17/release/vc_redist.x64.exe"
-                                   Description="Microsoft Visual C++ 2015-2022 Redistributable (x64)"
-                                   Hash="B09A3F6802741BD5E4A9598FF3F890FEB760D865C98F33B3CF6951C3ADE396C9819D6ECA562CAD6C339C53FC1AF88F7936DD09CBBAC22EE16FC67BAE076646B6"
-                                   ProductName="Microsoft Visual C++ 2015-2022 Redistributable (x64)" Size="1443272" Version="4.8.4115.0" />
+                        Id="VCREDIST_INSTALL" Permanent="yes" LogPathVariable="NetFx48WebLog">
+                <ExePackagePayload Name="vc_redist.x64.exe" DownloadUrl="https://aka.ms/vs/17/release/vc_redist.x64.exe" />
             </ExePackage>
         </PackageGroup>
 
