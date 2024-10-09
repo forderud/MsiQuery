@@ -1,5 +1,10 @@
 ﻿<Wix xmlns="http://wixtoolset.org/schemas/v4/wxs">
     <Package Name="ScheduleReboot" Language="1033" Version="1.0.0.0" Manufacturer="MsiQuery project" UpgradeCode="0d2456ba-6b7e-46aa-bec2-428f174081cf">
+        <Property Id="WINDOWSBUILDNUMBER" Secure="yes">
+            <RegistrySearch Id="BuildNumberSearch" Root="HKLM" Key="SOFTWARE\Microsoft\Windows NT\CurrentVersion" Name="CurrentBuildNumber" Type="raw" />
+        </Property>
+        <Launch Condition="Installed OR (WINDOWSBUILDNUMBER &gt;= 17763)" Message="This application require Windows 10 version 1809 (build 17763) or newer." />
+
         <!-- Disable downgrades, prevent side-by-side installations of same version -->
         <MajorUpgrade DowngradeErrorMessage="A newer version of [ProductName] is already installed." AllowSameVersionUpgrades="yes" />
         <!-- Embed binaries inside MSI instead of separate CAB files -->
