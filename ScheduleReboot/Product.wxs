@@ -1,4 +1,6 @@
-﻿<Wix xmlns="http://wixtoolset.org/schemas/v4/wxs">
+﻿<Wix xmlns="http://wixtoolset.org/schemas/v4/wxs"
+     xmlns:util="http://wixtoolset.org/schemas/v4/wxs/util"
+     xmlns:bal="http://wixtoolset.org/schemas/v4/wxs/bal">
     <Package Name="ScheduleReboot" Language="1033" Version="1.0.0.0" Manufacturer="MsiQuery project" UpgradeCode="0d2456ba-6b7e-46aa-bec2-428f174081cf">
         <!-- Disable downgrades, prevent side-by-side installations of same version -->
         <MajorUpgrade DowngradeErrorMessage="A newer version of [ProductName] is already installed." AllowSameVersionUpgrades="yes" />
@@ -11,6 +13,20 @@
     </Package>
 
     <Fragment>
+        <!-- Visual C++ 2015-2022 Redistributable (x64) version check. Returns 0.0.0.0 if not found (https://wixtoolset.org/docs/schema/util/productsearch/) -->
+        <util:ProductSearch Id="VCREDIST_x64_UC_CHECK"
+            UpgradeCode="36F68A90-239C-34DF-B58C-64B30153CE35"
+            Result="version"
+            Variable="VCREDIST_x64_VER1" />
+
+        <util:FileSearch Id="VCREDIST_x64_FILE_CHECK"
+            Path="vcruntime140.dll"
+            Result="version"
+            Variable="VCREDIST_x64_VER2" />
+
+        <!-- Precondition check (https://wixtoolset.org/docs/schema/bal/condition/) -->
+        <bal:Condition Condition="VCREDIST_x64_VER1 &gt;= v14.32.31332.0" Message="Microsoft Visual C++ 2015-2022 (x64) Redistributable missing" />
+
         <StandardDirectory Id="ProgramFiles64Folder">
             <Directory Id="INSTALLFOLDER" Name="ScheduleReboot" />
         </StandardDirectory>

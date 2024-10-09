@@ -8,4 +8,8 @@
   <ItemGroup>
     <Content Include="README.txt" />
   </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="WixToolset.Bal.wixext" Version="5.0.2" />
+    <PackageReference Include="WixToolset.Util.wixext" Version="5.0.2" />
+  </ItemGroup>
 </Project>
