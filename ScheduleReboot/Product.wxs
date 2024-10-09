@@ -5,6 +5,13 @@
         </Property>
         <Launch Condition="Installed OR (WINDOWSBUILDNUMBER &gt;= 17763)" Message="This application require Windows 10 version 1809 (build 17763) or newer." />
 
+        <!-- VC_redist 2015-2022 x64 UpgradeCode from https://stackoverflow.com/questions/35872374/detect-presence-of-vcredist-using-the-upgradecode
+             Minimum version obtained by downloading "Visual C++ Redistributable for Visual Studio 2022" (x64) 17.2 from https://my.visualstudio.com/Downloads and checking the EXE file version. -->
+        <Upgrade Id="36F68A90-239C-34DF-B58C-64B30153CE35">
+            <UpgradeVersion OnlyDetect="yes" Property="VCREDIST_X64" Minimum="14.32.31332.0" />
+        </Upgrade>
+        <Launch Condition="Installed OR VCREDIST_X64" Message="Microsoft Visual C++ 2015-2022 (x64) Redistributable missing or too old." />
+
         <!-- Disable downgrades, prevent side-by-side installations of same version -->
         <MajorUpgrade DowngradeErrorMessage="A newer version of [ProductName] is already installed." AllowSameVersionUpgrades="yes" />
         <!-- Embed binaries inside MSI instead of separate CAB files -->
