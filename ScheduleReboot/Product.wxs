@@ -3,7 +3,7 @@
         <Property Id="WINDOWSBUILDNUMBER" Secure="yes">
             <RegistrySearch Id="BuildNumberSearch" Root="HKLM" Key="SOFTWARE\Microsoft\Windows NT\CurrentVersion" Name="CurrentBuildNumber" Type="raw" />
         </Property>
-        <Launch Condition="Installed OR (WINDOWSBUILDNUMBER &gt;= 17763)" Message="This application require Windows 10 version 1809 (build 17763) or newer." />
+        <Launch Condition="Installed OR (WINDOWSBUILDNUMBER &gt;= 19044)" Message="This application require Windows 10 version 21H1 (build 19044) or newer." />
 
         <!-- VC_redist 2015-2022 x64 UpgradeCode from https://stackoverflow.com/questions/35872374/detect-presence-of-vcredist-using-the-upgradecode
              Minimum version obtained by downloading "Visual C++ Redistributable for Visual Studio 2022" (x64) 17.2 from https://my.visualstudio.com/Downloads and checking the EXE file version. -->
