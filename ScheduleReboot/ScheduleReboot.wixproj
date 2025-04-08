@@ -6,6 +6,6 @@
     <DefineConstants>Debug</DefineConstants>
   </PropertyGroup>
   <ItemGroup>
-    <Content Include="README.txt" />
+    <Content Include="README.md" />
   </ItemGroup>
 </Project>

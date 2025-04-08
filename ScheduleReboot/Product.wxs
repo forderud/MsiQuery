@@ -35,8 +35,8 @@
 
     <Fragment>
         <ComponentGroup Id="ProductComponents" Directory="INSTALLFOLDER">
-            <Component Id="README.txt">
-                <File Id="README.txt" KeyPath="yes" Source="README.txt" />
+            <Component Id="README.md">
+                <File Id="README.md" KeyPath="yes" Source="README.md" />
             </Component>
         </ComponentGroup>
     </Fragment>
