@@ -1,5 +1,6 @@
 ﻿using System.Management;
 
+// Doc: https://learn.microsoft.com/en-us/windows/win32/wmisdk/win32-installedwin32program
 ManagementObjectSearcher mos = new ManagementObjectSearcher("SELECT * FROM Win32_InstalledWin32Program");
 foreach (ManagementObject mo in mos.Get())
 {
