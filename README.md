@@ -62,7 +62,7 @@ Microsoft is recommending to migrate to the newer [MSIX](https://learn.microsoft
 The MsixQuery tool can be used to detect installed MSIX apps.
 
 
-## MicroSoft Update packages (MSU files)
+## Microsoft Update packages (MSU files)
 MSU files is a separate format used for distribution of Windows OS updates. They are technically archives that contain cabinet (CAB) files with updates together with XML and TXT metadata.
 
 [Description of the Windows Update Standalone Installer in Windows](https://support.microsoft.com/en-us/topic/description-of-the-windows-update-standalone-installer-in-windows-799ba3df-ec7e-b05e-ee13-1cdae8f23b19).
