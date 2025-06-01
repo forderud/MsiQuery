@@ -19,7 +19,13 @@ $MinorVer = $ver_tokens[1]
 $PatchVer = $ver_tokens[2]
 $BuildVer = $ver_tokens[3]
 
-### Build solution in Release for x64
+## restore nuget packages
+msbuild /nologo /verbosity:minimal /property:RestorePackagesConfig=true /target:restore MsiQuery.sln
+if ($LastExitCode -ne 0) {
+    throw "msbuild failure"
+}
+
+## Build solution in Release for x64
 msbuild /nologo /verbosity:minimal /property:Configuration="Release"`;Platform="x64"`;MajorVer=$MajorVer`;MinorVer=$MinorVer`;PatchVer=$PatchVer`;BuildVer=$BuildVer MsiQuery.sln
 if ($LastExitCode -ne 0) {
     throw "msbuild failure"
