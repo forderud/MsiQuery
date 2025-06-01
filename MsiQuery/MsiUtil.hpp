@@ -56,6 +56,9 @@ static std::wstring GetProductInfo (const std::wstring& product_code, const wcha
     else if (ret != ERROR_MORE_DATA)
         throw std::runtime_error("MsiGetProductInfo failed");
 
+    if (buf_len == 32)
+        buf_len = 38; // increase buffer to fit a GUID string (prevents additional ERROR_MORE_DATA)
+
     std::wstring buffer(buf_len++, L'\0');
     ret = MsiGetProductInfoW(product_code.c_str(), attribute, const_cast<wchar_t*>(buffer.data()), &buf_len);
     if (ret != ERROR_SUCCESS)

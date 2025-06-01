@@ -198,6 +198,7 @@ std::wstring ParseInstalledApp (std::wstring product_code) {
         std::wstring inst_loc = GetProductInfo(product_code, INSTALLPROPERTY_INSTALLLOCATION); // seem to be empty
         //std::wstring inst_folder = GetProductInfo(product_code, L"INSTALLFOLDER"); // not found
         std::wstring prod_id = GetProductInfo(product_code, INSTALLPROPERTY_PRODUCTID); // seem to be empty
+        std::wstring package_code = GetProductInfo(product_code, INSTALLPROPERTY_PACKAGECODE);
 
         std::wstring inst_name = GetProductInfo(product_code, INSTALLPROPERTY_INSTALLEDPRODUCTNAME); // seem identical to ProductName
         std::wstring publisher = GetProductInfo(product_code, INSTALLPROPERTY_PUBLISHER); // seem identical to Manufacturer
@@ -209,6 +210,7 @@ std::wstring ParseInstalledApp (std::wstring product_code) {
         std::wcout << L"  Version: " << version << L"\n";
         std::wcout << L"  Publisher: " << publisher << L"\n";
         std::wcout << L"  InstallDate: " << inst_date << L"\n";
+        std::wcout << L"  PackageCode: " << package_code << L"\n";
         //std::wcout << L"  MSI cache: " << msi_cache_file << L"\n";
     }
 
