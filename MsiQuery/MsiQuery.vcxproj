@@ -16,6 +16,10 @@
     <ProjectGuid>{0c6b0f58-daae-4e82-9f1b-b1c6f9ecd490}</ProjectGuid>
     <RootNamespace>MsiQuery</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+    <MajorVer>0</MajorVer>
+    <MinorVer>0</MinorVer>
+    <PatchVer>0</PatchVer>
+    <BuildVer>0</BuildVer>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
@@ -62,12 +66,9 @@
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
-    <PreBuildEvent>
-      <Command>PatchResource.py MsiQuery.rc</Command>
-    </PreBuildEvent>
-    <PreBuildEvent>
-      <Message>Update version based on git tag</Message>
-    </PreBuildEvent>
+    <ResourceCompile>
+      <PreprocessorDefinitions>VERSION_MAJOR=$(MajorVer);VERSION_MINOR=$(MinorVer);VERSION_PATCH=$(PatchVer);VERSION_BUILD=$(BuildVer);%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ResourceCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
@@ -85,12 +86,9 @@
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
-    <PreBuildEvent>
-      <Command>PatchResource.py MsiQuery.rc</Command>
-    </PreBuildEvent>
-    <PreBuildEvent>
-      <Message>Update version based on git tag</Message>
-    </PreBuildEvent>
+    <ResourceCompile>
+      <PreprocessorDefinitions>VERSION_MAJOR=$(MajorVer);VERSION_MINOR=$(MinorVer);VERSION_PATCH=$(PatchVer);VERSION_BUILD=$(BuildVer);%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ResourceCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp" />
@@ -98,7 +96,6 @@
   <ItemGroup>
     <ClInclude Include="MsiQuery.hpp" />
     <ClInclude Include="MsiUtil.hpp" />
-    <ClInclude Include="resource.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="README.md" />
