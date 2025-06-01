@@ -32,9 +32,9 @@ Command-line tool for querying MSI files and installed Windows apps
 Usage: `MsiQuery.exe [*|<filename.msi>|{ProductCode}|{UpgradeCode}]` where `*` will list all installed products.
 
 The following is listed for each product:
-* [PackageCode](https://learn.microsoft.com/en-us/windows/win32/msi/package-codes): Unique identifier for a MSI installer file that _might_ contain multiple products.
-* [ProductCode](https://docs.microsoft.com/en-us/windows/win32/msi/productcode): Unique identifier for a particular product release. Must be changed as part of a [major version upgrade](https://learn.microsoft.com/en-us/windows/win32/msi/major-upgrades) but can be kept unchanged for [small updates](https://learn.microsoft.com/en-us/windows/win32/msi/small-updates)
-* [UpgradeCode](https://docs.microsoft.com/en-us/windows/win32/msi/using-an-upgradecode) (if present): Product identifier that remain unchanged across major version changes.
+* [**PackageCode**](https://learn.microsoft.com/en-us/windows/win32/msi/package-codes): Unique identifier for a MSI installer file that _might_ contain multiple products.
+* [**ProductCode**](https://docs.microsoft.com/en-us/windows/win32/msi/productcode): Unique identifier for a particular product release. Must be changed as part of a [major version upgrade](https://learn.microsoft.com/en-us/windows/win32/msi/major-upgrades) but can be kept unchanged for [small updates](https://learn.microsoft.com/en-us/windows/win32/msi/small-updates)
+* [**UpgradeCode**](https://docs.microsoft.com/en-us/windows/win32/msi/using-an-upgradecode) (if present): Product identifier that remain unchanged across major version changes.
 * [ProductName](https://docs.microsoft.com/en-us/windows/win32/msi/productname)
 * [ProductVersion](https://docs.microsoft.com/en-us/windows/win32/msi/productversion)
 * [Manufacturer](https://docs.microsoft.com/en-us/windows/win32/msi/manufacturer)
