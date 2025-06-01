@@ -444,7 +444,9 @@ public:
     /** Query CustomAction table. */
     std::vector<CustomActionEntry> QueryCustomAction () {
         PMSIHANDLE msi_view;
-        Execute(L"SELECT `Action`,`Type`,`Source`,`Target`,`ExtendedType` FROM `CustomAction`", &msi_view);
+        bool ok = Execute(L"SELECT `Action`,`Type`,`Source`,`Target`,`ExtendedType` FROM `CustomAction`", &msi_view);
+        if (!ok)
+            return {};
 
         std::vector<CustomActionEntry> result;
         while (true) {
