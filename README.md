@@ -117,7 +117,7 @@ Installers are using the following return-codes to signal installation result:
 | 1618 | Retry (another installation is already in progress) |
 |      | Other values are treated as failure |
 
-The above codes are used by InTune and probably other MDM solutions to detect installation success/failure and retry or restart if needed afterwards. We should therefore do the same.
+The above codes are used by InTune and probably other MDM solutions to detect installation success/failure and retry or restart if needed afterwards.
 
 The codes are documented on [MsiExec.exe and InstMsi.exe error messages](https://learn.microsoft.com/en-us/windows/win32/msi/error-codes).
 
