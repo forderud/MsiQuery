@@ -68,7 +68,7 @@ MSU files is a separate format used for distribution of Windows OS updates. They
 
 [Description of the Windows Update Standalone Installer in Windows](https://support.microsoft.com/en-us/topic/description-of-the-windows-update-standalone-installer-in-windows-799ba3df-ec7e-b05e-ee13-1cdae8f23b19).
 
-Windows OS updates and can be downloaded from https://www.catalog.update.microsoft.com/
+Windows OS updates and can be downloaded from [Microsoft Update Catalog](https://www.catalog.update.microsoft.com/).
 
 Common operations:
 | Operation | Description |
