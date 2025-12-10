@@ -130,7 +130,7 @@ Installers are using the following return-codes to signal installation result:
 
 The above codes are used by InTune and probably other MDM solutions to detect installation success/failure and retry or restart if needed afterwards.
 
-The codes are documented on [MsiExec.exe and InstMsi.exe error messages](https://learn.microsoft.com/en-us/windows/win32/msi/error-codes) and [Windows Installer Error Messages (for Developers)](https://learn.microsoft.com/en-us/windows/win32/msi/windows-installer-error-messages).
+The codes are documented on [MsiExec.exe and InstMsi.exe error messages](https://learn.microsoft.com/en-us/windows/win32/msi/error-codes) and [Windows Installer Error Messages](https://learn.microsoft.com/en-us/windows/win32/msi/windows-installer-error-messages).
 
 ## References
 Related tools:
