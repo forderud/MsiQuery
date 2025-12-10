@@ -96,7 +96,7 @@ SerialNumber    : <serial>
 Version         : 10.0.19044
 ```
 
-The `BuildNumber` part of the OS version will _increment_ after installing Windows OS updates.
+The `BuildNumber` part of the OS version will _increment_ when installing Windows OS updates.
 
 It's also possible get a listing of all installed hotfixes (KB's) with [`Get-HotFix`](https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.management/get-hotfix).
 
