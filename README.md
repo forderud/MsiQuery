@@ -68,6 +68,18 @@ MSU files is a separate format used for distribution of Windows OS updates. They
 
 [Description of the Windows Update Standalone Installer in Windows](https://support.microsoft.com/en-us/topic/description-of-the-windows-update-standalone-installer-in-windows-799ba3df-ec7e-b05e-ee13-1cdae8f23b19).
 
+Windows OS updates and can be downloaded from https://www.catalog.update.microsoft.com/
+
+Common operations:
+| Operation | Description |
+|-----------|-------------|
+| Install/upgrade | `wusa.exe <filename>.msu /quiet` |
+| Uninstall/downgrade | `wusa.exe /uninstall /kb:<KB number> /quiet` |
+| Identify KB number | Unpack MSU archive and parse XML or TXT files inside (TODO: find code sample) |
+| Check if installed | see link below |
+
+DOC: https://learn.microsoft.com/en-us/mem/intune/apps/apps-win32-deploy-update-package
+
 
 ### Sample scripts for OS version
 Get OS version:
