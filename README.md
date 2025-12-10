@@ -66,7 +66,7 @@ This query does unfortunately not include MSIX-based apps. The `wmic product get
 It's possible to use the `Get-WmiObject Win32_Product` command to list all MSI-installed apps with ProductCode on the system. However, this listing will not include EXE-installed apps without a ProductCode, like 7-zip and Notepad++. It's therefore insufficient if support for non-MSI installers is also required.
 
 ## Return codes
-Installers on Windows are using the following return-codes to signal installation result:
+Installers on Windows use the following return-codes to signal installation result:
 
 | Code | Interpretation |
 |------|----------------|
