@@ -51,6 +51,22 @@ The [ParseMSI.ps1](./ParseMSI.ps1) script can be used to detect installed MSI ap
 ### ScheduleReboot Installer
 Sample installer for testing of reboot handling. The installer always returns ERROR_SUCCESS_REBOOT_REQUIRED (3010) to indicate that a reboot is required to complete the install.
 
+## Return codes
+Installers are using the following return-codes to signal installation result:
+
+| Code | Interpretation |
+|------|----------------|
+| 0    | Success (installation completed successfully) |
+| 1707 | Success (installation completed successfully) |
+| 3010 | Soft reboot (restart is required to complete the install) |
+| 1641 | Hard reboot (installer have initiated a restart) |
+| 1618 | Retry (another installation is already in progress) |
+|      | Other values are treated as failure |
+
+The above codes are used by InTune and probably other MDM solutions to detect installation success/failure and retry or restart if needed afterwards.
+
+The codes are documented on [MsiExec.exe and InstMsi.exe error messages](https://learn.microsoft.com/en-us/windows/win32/msi/error-codes) and [Windows Installer Error Messages](https://learn.microsoft.com/en-us/windows/win32/msi/windows-installer-error-messages).
+
 ## MSIX packages
 Microsoft is recommending to migrate to the newer [MSIX](https://learn.microsoft.com/en-us/windows/msix/overview) installer format. However, it's more restrictive with limitations on inter-app communication. Also, tooling support is lagging behind - at least for Qt (see [How to package a Win32 desktop app in MSIX?](https://bugreports.qt.io/browse/QTBUG-97088)). Adoption can therefore be challenging.
 
@@ -99,23 +115,6 @@ Version         : 10.0.19044
 The `BuildNumber` part of the OS version will _increment_ when installing Windows OS updates.
 
 It's also possible get a listing of all installed hotfixes (KB's) with [`Get-HotFix`](https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.management/get-hotfix).
-
-
-## Return codes
-Installers are using the following return-codes to signal installation result:
-
-| Code | Interpretation |
-|------|----------------|
-| 0    | Success (installation completed successfully) |
-| 1707 | Success (installation completed successfully) |
-| 3010 | Soft reboot (restart is required to complete the install) |
-| 1641 | Hard reboot (installer have initiated a restart) |
-| 1618 | Retry (another installation is already in progress) |
-|      | Other values are treated as failure |
-
-The above codes are used by InTune and probably other MDM solutions to detect installation success/failure and retry or restart if needed afterwards.
-
-The codes are documented on [MsiExec.exe and InstMsi.exe error messages](https://learn.microsoft.com/en-us/windows/win32/msi/error-codes) and [Windows Installer Error Messages](https://learn.microsoft.com/en-us/windows/win32/msi/windows-installer-error-messages).
 
 ## References
 Related tools:
