@@ -67,7 +67,7 @@ It's possible to use the `Get-WmiObject Win32_Product` command to list all MSI-i
 
 
 ## Microsoft Update packages (MSU files)
-MSU files is a separate format used for distribution of Windows OS updates. They are technically archives that contain cabinet (CAB) files with updates together with XML and TXT metadata.
+MSU files is a separate format used for distribution of Windows OS updates. They are archives that contain cabinet (CAB) files with updates together with XML and TXT metadata.
 
 Windows OS updates and can be downloaded from [Microsoft Update Catalog](https://www.catalog.update.microsoft.com/).
 
