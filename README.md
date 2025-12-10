@@ -51,22 +51,6 @@ The [ParseMSI.ps1](./ParseMSI.ps1) script can be used to detect installed MSI ap
 ### ScheduleReboot Installer
 Sample installer for testing of reboot handling. The installer always returns ERROR_SUCCESS_REBOOT_REQUIRED (3010) to indicate that a reboot is required to complete the install.
 
-## Return codes
-Installers are using the following return-codes to signal installation result:
-
-| Code | Interpretation |
-|------|----------------|
-| 0    | Success (installation completed successfully) |
-| 1707 | Success (installation completed successfully) |
-| 3010 | Soft reboot (restart is required to complete the install) |
-| 1641 | Hard reboot (installer have initiated a restart) |
-| 1618 | Retry (another installation is already in progress) |
-|      | Other values are treated as failure |
-
-The above codes are used by InTune and probably other MDM solutions to detect installation success/failure and retry or restart if needed afterwards.
-
-The codes are documented on [MsiExec.exe and InstMsi.exe error messages](https://learn.microsoft.com/en-us/windows/win32/msi/error-codes) and [Windows Installer Error Messages](https://learn.microsoft.com/en-us/windows/win32/msi/windows-installer-error-messages).
-
 ## MSIX packages
 Microsoft is recommending to migrate to the newer [MSIX](https://learn.microsoft.com/en-us/windows/msix/overview) installer format. However, it's more restrictive with limitations on inter-app communication. Also, tooling support is lagging behind - at least for Qt (see [How to package a Win32 desktop app in MSIX?](https://bugreports.qt.io/browse/QTBUG-97088)). Adoption can therefore be challenging.
 
@@ -81,6 +65,21 @@ This query does unfortunately not include MSIX-based apps. The `wmic product get
 
 It's possible to use the `Get-WmiObject Win32_Product` command to list all MSI-installed apps with ProductCode on the system. However, this listing will not include EXE-installed apps without a ProductCode, like 7-zip and Notepad++. It's therefore insufficient if support for non-MSI installers is also required.
 
+## Return codes
+Installers on Windows are using the following return-codes to signal installation result:
+
+| Code | Interpretation |
+|------|----------------|
+| 0    | Success (installation completed successfully) |
+| 1707 | Success (installation completed successfully) |
+| 3010 | Soft reboot (restart is required to complete the install) |
+| 1641 | Hard reboot (installer have initiated a restart) |
+| 1618 | Retry (another installation is already in progress) |
+|      | Other values are treated as failure |
+
+The above codes are used by InTune and probably other MDM solutions to detect installation success/failure and retry or restart if needed afterwards.
+
+The codes are documented on [MsiExec.exe and InstMsi.exe error messages](https://learn.microsoft.com/en-us/windows/win32/msi/error-codes) and [Windows Installer Error Messages](https://learn.microsoft.com/en-us/windows/win32/msi/windows-installer-error-messages).
 
 ## Microsoft Update packages (MSU files)
 MSU files is a separate format used for distribution of Windows OS updates. They are archives that contain cabinet (CAB) files with updates together with XML and TXT metadata.
