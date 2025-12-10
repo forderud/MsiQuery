@@ -48,6 +48,8 @@ The following details are also listed:
 ### Inventory scan
 The [DetectInstalledApps.ps1](./DetectInstalledApps.ps1) script can be used to detect installed EXE and MSI applications through a registry scan (see [Windows Installer Properties for the Uninstall Registry Key](https://learn.microsoft.com/en-us/windows/win32/msi/uninstall-registry-key)).
 
+This query does unfortunately not include MSIX-based apps. The `wmic product get name` command also suffers from the same limitation of not detecting MSIX apps.
+
 It's possible to use the `Get-WmiObject Win32_Product` command to list all MSI-installed apps with ProductCode on the system. However, this listing will not include EXE-installed apps without a ProductCode, like 7-zip and Notepad++. It's therefore insufficient if support for non-MSI installers is also required.
 
 ### ParseMSI script
