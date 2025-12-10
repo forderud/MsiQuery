@@ -23,8 +23,8 @@ Common operations:
 | Uninstall | Command in `HKLM\Software\Microsoft\Windows\CurrentVersion\Uninstall\{ProductCode}\UninstallString` registry key (`msiexec /x "{ProductCode}" /qn` for MSI apps)|
 | Upgrade | `msiexec.exe /i <appname>.msi /qn` (will automatically uninstall the old version before installing the new version and perform migration steps) |
 | Downgrade | Achieved through _uninstall_ followed by _install_ of the old version. |
-| Identify ProductCode | Check MsiQuery for code sample. |
-| Check if installed | Check MsiQuery for code sample. |
+| Identify ProductCode | Check `MsiQuery` project for code sample. |
+| Check if installed | Check `MsiQuery` project for code sample. |
 
 ### MsiQuery tool
 Command-line tool for querying MSI files and installed Windows apps
