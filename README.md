@@ -11,7 +11,7 @@ Overview of categories of SW installers supported by Windows:
 
 **Package identifier**: `ProductCode` (128bit unique GUID for MSI), `PackageFullName` string (for MSIX) or similar. All SW applications that show up in the Windows control panel for uninstallation does have a unique identifier.
 
-The source of truth for installed EXE and MSI apps are the `HKLM\Software\Microsoft\Windows\CurrentVersion\Uninstall\{ProductCode}` registry folders.
+The source of truth for installed EXE and MSI apps are the `HKLM\Software\Microsoft\Windows\CurrentVersion\Uninstall\{ProductCode}` registry folders. These are used to populate the listing of installed apps in the control panel.
 
 ## Windows Installer packages (MSI files)
 **Format**: MSI (self-described format with metadata). Primarily designed for application SW, but drivers and system configuration can also be MSI-packaged for unified installation.
