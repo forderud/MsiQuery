@@ -96,27 +96,7 @@ SerialNumber    : <serial>
 Version         : 10.0.19044
 ```
 
-Get list of installed hotfixes (KB's):
-```
-PS > Get-HotFix
-
-Source        Description      HotFixID      InstalledBy          InstalledOn
-------        -----------      --------      -----------          -----------
-MYMACHINE     Update           KB5027122     NT AUTHORITY\SYSTEM  2023-06-23 12:00:00 AM
-MYMACHINE     Update           KB5003791                          2021-10-06 12:00:00 AM
-MYMACHINE     Security Update  KB5012170     NT AUTHORITY\SYSTEM  2022-12-14 12:00:00 AM
-MYMACHINE     Security Update  KB5028166     NT AUTHORITY\SYSTEM  2023-07-28 12:00:00 AM
-MYMACHINE     Security Update  KB5014032     NT AUTHORITY\SYSTEM  2022-11-11 12:00:00 AM
-MYMACHINE     Update           KB5016705     NT AUTHORITY\SYSTEM  2022-11-11 12:00:00 AM
-MYMACHINE     Update           KB5018506     NT AUTHORITY\SYSTEM  2022-11-21 12:00:00 AM
-MYMACHINE     Update           KB5020372     NT AUTHORITY\SYSTEM  2022-12-21 12:00:00 AM
-MYMACHINE     Update           KB5022924     NT AUTHORITY\SYSTEM  2023-03-23 12:00:00 AM
-MYMACHINE     Update           KB5023794     NT AUTHORITY\SYSTEM  2023-04-21 12:00:00 AM
-MYMACHINE     Update           KB5025315     NT AUTHORITY\SYSTEM  2023-05-18 12:00:00 AM
-MYMACHINE     Update           KB5026879     NT AUTHORITY\SYSTEM  2023-06-23 12:00:00 AM
-MYMACHINE     Update           KB5028318     NT AUTHORITY\SYSTEM  2023-07-20 12:00:00 AM
-MYMACHINE     Security Update  KB5005699                          2021-10-06 12:00:00 AM
-```
+It's also possible get a listing of all installed hotfixes (KB's) with [`Get-HotFix`](https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.management/get-hotfix).
 
 
 ## Return codes
