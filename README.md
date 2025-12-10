@@ -45,13 +45,6 @@ The following details are also listed:
 * Path to installed EXE & DLL files (based on [File table](https://docs.microsoft.com/en-us/windows/win32/msi/file-table) query with [MsiGetComponentPath](https://docs.microsoft.com/en-us/windows/win32/api/msi/nf-msi-msigetcomponentpathw) lookup) (only for installed apps)
 * Added [registry entries](https://docs.microsoft.com/en-us/windows/win32/msi/registry-table) (can also be created through custom actions)
 
-### Inventory scan
-The [DetectInstalledApps.ps1](./DetectInstalledApps.ps1) script can be used to detect installed EXE and MSI applications through a registry scan (see [Windows Installer Properties for the Uninstall Registry Key](https://learn.microsoft.com/en-us/windows/win32/msi/uninstall-registry-key)).
-
-This query does unfortunately not include MSIX-based apps. The `wmic product get name` command also suffers from the same limitation of not detecting MSIX apps.
-
-It's possible to use the `Get-WmiObject Win32_Product` command to list all MSI-installed apps with ProductCode on the system. However, this listing will not include EXE-installed apps without a ProductCode, like 7-zip and Notepad++. It's therefore insufficient if support for non-MSI installers is also required.
-
 ### ParseMSI script
 The [ParseMSI.ps1](./ParseMSI.ps1) script can be used to detect installed MSI applications through the [WindowsInstaller](https://learn.microsoft.com/en-us/windows/win32/msi/installer-object) COM interfaces.
 
@@ -63,6 +56,15 @@ Microsoft is recommending to migrate to the newer [MSIX](https://learn.microsoft
 
 ### MsixQuery tools
 The [`MsixQuery.ps1`](./MsixQuery.ps1) script or [MsixQuery](./MsixQuery) project can be used to detect installed MSIX apps.
+
+
+## Inventory scan
+The [DetectInstalledApps.ps1](./DetectInstalledApps.ps1) script can be used to detect installed EXE and MSI applications through a registry scan (see [Windows Installer Properties for the Uninstall Registry Key](https://learn.microsoft.com/en-us/windows/win32/msi/uninstall-registry-key)).
+
+This query does unfortunately not include MSIX-based apps. The `wmic product get name` command also suffers from the same limitation of not detecting MSIX apps.
+
+It's possible to use the `Get-WmiObject Win32_Product` command to list all MSI-installed apps with ProductCode on the system. However, this listing will not include EXE-installed apps without a ProductCode, like 7-zip and Notepad++. It's therefore insufficient if support for non-MSI installers is also required.
+
 
 ## Microsoft Update packages (MSU files)
 MSU files is a separate format used for distribution of Windows OS updates. They are technically archives that contain cabinet (CAB) files with updates together with XML and TXT metadata.
