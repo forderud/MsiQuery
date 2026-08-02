@@ -14,7 +14,6 @@
     <VCProjectVersion>16.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
     <ProjectGuid>{0c6b0f58-daae-4e82-9f1b-b1c6f9ecd490}</ProjectGuid>
-    <RootNamespace>MsiQuery</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
     <MajorVer>0</MajorVer>
     <MinorVer>0</MinorVer>
